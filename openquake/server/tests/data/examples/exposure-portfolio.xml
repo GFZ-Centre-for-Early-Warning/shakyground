@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4">
+  <exposureModel id="ep1" category="buildings" taxonomySource="Pavia taxonomy">
+    <description>Collection of existing building in downtown Pavia</description>
+    <conversions>
+      <area unit="GBP" type="per_asset"/>
+      <costTypes>
+        <costType name="contents" unit="CHF" type="per_area"/>
+        <costType name="structural" unit="USD" type="aggregated" retrofittedType="aggregated" retrofittedUnit="EUR"/>
+      </costTypes>
+    </conversions>
+    <assets>
+      <asset id="asset_01" taxonomy="RC/DMRF-D/LR" area="120" units="7">
+        <location lon="9.15000" lat="45.16667"/>
+        <costs>
+          <cost type="contents" value="12.95"/>
+          <cost type="structural" value="150000" retrofitted="109876" deductible="55" insuranceLimit="999"/>
+        </costs>
+      </asset>
+      <asset id="asset_02" taxonomy="RC/DMRF-D/HR" area="119" units="6">
+        <location lon="9.15333" lat="45.12200"/>
+        <costs>
+          <cost type="contents" value="21.95"/>
+          <cost type="structural" value="250000" retrofitted="205432" deductible="66" insuranceLimit="1999"/>
+        </costs>
+      </asset>
+      <asset id="asset_03" taxonomy="RC/DMRF-D/LR" area="118" units="5">
+        <location lon="9.14777" lat="45.17999"/>
+        <costs>
+          <cost type="contents" value="30.95"/>
+          <cost type="structural" value="500000" retrofitted="495432" deductible="77" insuranceLimit="2888"/>
+        </costs>
+      </asset>
+    </assets>
+  </exposureModel>
+</nrml>

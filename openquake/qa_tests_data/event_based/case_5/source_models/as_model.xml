@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nrml
+xmlns="http://openquake.org/xmlns/nrml/0.4"
+xmlns:gml="http://www.opengis.net/gml"
+>
+    <sourceModel>
+        <areaSource
+        id="1"
+        name="CZAS080"
+        tectonicRegion="Volcanic"
+        >
+            <areaGeometry>
+                <gml:Polygon>
+                    <gml:exterior>
+                        <gml:LinearRing>
+                            <gml:posList>
+                                1.2188008E+01 5.0311620E+01 1.2549615E+01 5.0397782E+01 1.2724297E+01 5.0162135E+01 1.2354019E+01 5.0120428E+01
+                            </gml:posList>
+                        </gml:LinearRing>
+                    </gml:exterior>
+                </gml:Polygon>
+                <upperSeismoDepth>
+                    0.0000000E+00
+                </upperSeismoDepth>
+                <lowerSeismoDepth>
+                    3.0000000E+01
+                </lowerSeismoDepth>
+            </areaGeometry>
+            <magScaleRel>
+                WC1994
+            </magScaleRel>
+            <ruptAspectRatio>
+                1.0000000E+00
+            </ruptAspectRatio>
+            <incrementalMFD
+            binWidth="2.0000000E-01"
+            minMag="4.7000000E+00"
+            >
+                <occurRates>
+                    9.3999623E-03 5.2859873E-03 2.9725291E-03 1.6715759E-03 9.3999623E-04 5.2859873E-04 1.4835772E-04
+                </occurRates>
+            </incrementalMFD>
+            <nodalPlaneDist>
+                <nodalPlane dip="9.0000000E+01" probability="1.0000000E+00" rake="0.0000000E+00" strike="0.0000000E+00"/>
+            </nodalPlaneDist>
+            <hypoDepthDist>
+                <hypoDepth depth="1.1000000E+01" probability="1.0000000E+00"/>
+            </hypoDepthDist>
+        </areaSource>
+        <areaSource
+        id="2"
+        name="CZAS080"
+        tectonicRegion="Volcanic"
+        >
+            <areaGeometry>
+                <gml:Polygon>
+                    <gml:exterior>
+                        <gml:LinearRing>
+                            <gml:posList>
+                                1.2188008E+01 5.0311620E+01 1.2549615E+01 5.0397782E+01 1.2724297E+01 5.0162135E+01 1.2354019E+01 5.0120428E+01
+                            </gml:posList>
+                        </gml:LinearRing>
+                    </gml:exterior>
+                </gml:Polygon>
+                <upperSeismoDepth>
+                    0.0000000E+00
+                </upperSeismoDepth>
+                <lowerSeismoDepth>
+                    3.0000000E+01
+                </lowerSeismoDepth>
+            </areaGeometry>
+            <magScaleRel>
+                WC1994
+            </magScaleRel>
+            <ruptAspectRatio>
+                1.0000000E+00
+            </ruptAspectRatio>
+            <incrementalMFD
+            binWidth="2.0000000E-01"
+            minMag="4.7000000E+00"
+            >
+                <occurRates>
+                    1.0444403E-03 5.8733192E-04 3.3028101E-04 1.8573066E-04 1.0444403E-04 5.8733192E-05 1.6484191E-05
+                </occurRates>
+            </incrementalMFD>
+            <nodalPlaneDist>
+                <nodalPlane dip="9.0000000E+01" probability="1.0000000E+00" rake="-9.0000000E+01" strike="0.0000000E+00"/>
+            </nodalPlaneDist>
+            <hypoDepthDist>
+                <hypoDepth depth="1.1000000E+01" probability="1.0000000E+00"/>
+            </hypoDepthDist>
+        </areaSource>
+    </sourceModel>
+</nrml>

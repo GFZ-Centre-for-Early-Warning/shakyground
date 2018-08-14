@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nrml
+xmlns="http://openquake.org/xmlns/nrml/0.5"
+xmlns:gml="http://www.opengis.net/gml"
+>
+    <ruptureCollection
+    investigationTime="1.0"
+    >
+        <ruptureGroup
+        id="1"
+        tectonicRegion="active shallow crust"
+        >
+            <singlePlaneRupture
+            id="44"
+            multiplicity="4"
+            >
+                <stochasticEventSets>
+                    <SES
+                    id="1"
+                    >
+                        188978561024 188978561025
+                    </SES>
+                    <SES
+                    id="2"
+                    >
+                        188978561026
+                    </SES>
+                    <SES
+                    id="3"
+                    >
+                        188978561027
+                    </SES>
+                </stochasticEventSets>
+                <magnitude>
+                    5.8000002e+00
+                </magnitude>
+                <strike>
+                    0.0000000e+00
+                </strike>
+                <dip>
+                    9.0000000e+01
+                </dip>
+                <rake>
+                    0.0000000e+00
+                </rake>
+                <hypocenter depth="2.1200001E+01" lat="0.0000000E+00" lon="0.0000000E+00"/>
+                <planarSurface>
+                    <topLeft depth="17.2283592" lat="-0.0357178" lon="0.0000000"/>
+                    <topRight depth="17.2283592" lat="0.0357178" lon="0.0000000"/>
+                    <bottomLeft depth="25.1716404" lat="-0.0357178" lon="0.0000000"/>
+                    <bottomRight depth="25.1716404" lat="0.0357178" lon="0.0000000"/>
+                </planarSurface>
+            </singlePlaneRupture>
+            <singlePlaneRupture
+            id="45"
+            multiplicity="5"
+            >
+                <stochasticEventSets>
+                    <SES
+                    id="1"
+                    >
+                        193273528320
+                    </SES>
+                    <SES
+                    id="2"
+                    >
+                        193273528321 193273528322 193273528323
+                    </SES>
+                    <SES
+                    id="3"
+                    >
+                        193273528324
+                    </SES>
+                </stochasticEventSets>
+                <magnitude>
+                    6.0500002e+00
+                </magnitude>
+                <strike>
+                    0.0000000e+00
+                </strike>
+                <dip>
+                    9.0000000e+01
+                </dip>
+                <rake>
+                    0.0000000e+00
+                </rake>
+                <hypocenter depth="2.1200001E+01" lat="0.0000000E+00" lon="0.0000000E+00"/>
+                <planarSurface>
+                    <topLeft depth="16.0539970" lat="-0.0462791" lon="0.0000000"/>
+                    <topRight depth="16.0539970" lat="0.0462791" lon="0.0000000"/>
+                    <bottomLeft depth="26.3460026" lat="-0.0462791" lon="0.0000000"/>
+                    <bottomRight depth="26.3460026" lat="0.0462791" lon="0.0000000"/>
+                </planarSurface>
+            </singlePlaneRupture>
+            <singlePlaneRupture
+            id="46"
+            multiplicity="4"
+            >
+                <stochasticEventSets>
+                    <SES
+                    id="1"
+                    >
+                        197568495616 197568495618 197568495619
+                    </SES>
+                    <SES
+                    id="3"
+                    >
+                        197568495617
+                    </SES>
+                </stochasticEventSets>
+                <magnitude>
+                    6.3000002e+00
+                </magnitude>
+                <strike>
+                    0.0000000e+00
+                </strike>
+                <dip>
+                    9.0000000e+01
+                </dip>
+                <rake>
+                    0.0000000e+00
+                </rake>
+                <hypocenter depth="2.1200001E+01" lat="0.0000000E+00" lon="0.0000000E+00"/>
+                <planarSurface>
+                    <topLeft depth="14.5323925" lat="-0.0599632" lon="0.0000000"/>
+                    <topRight depth="14.5323925" lat="0.0599632" lon="0.0000000"/>
+                    <bottomLeft depth="27.8676071" lat="-0.0599632" lon="0.0000000"/>
+                    <bottomRight depth="27.8676071" lat="0.0599632" lon="0.0000000"/>
+                </planarSurface>
+            </singlePlaneRupture>
+        </ruptureGroup>
+    </ruptureCollection>
+</nrml>
