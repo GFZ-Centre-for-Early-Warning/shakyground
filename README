@@ -13,3 +13,5 @@ psutil
 
 #currently requires gmt --> will be removed
 
+#service can be run with the Test/test.xml (quakeml) event like:
+python3 service.py Test/test.xml
