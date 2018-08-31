@@ -136,7 +136,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     #generate a quakemap
     sm = pandas.DataFrame()
     sm["LON"] = sites["lon"]
-    sm["LAT"] = sites["lon"]
+    sm["LAT"] = sites["lat"]
     sm["PGA"] = shakemap["{}/{}/{}/{}".format(eid,gmpe,imt,'median')]
     sm["STDPGA"] = shakemap["{}/{}/{}/{}".format(eid,gmpe,imt,'sigma')]
 
