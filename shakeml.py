@@ -32,7 +32,7 @@ def shakemap2quakemap(shakemlfile):
     #tree = le.parse(shakemlfile)
     #large text node parser
     parser = le.XMLParser(huge_tree=True)
-    shakeml = le.parse(shakemlfile,parser)
+    shakeml = le.parse(io.StringIO(shakemlfile),parser)
     nsmap = shakeml.getroot().nsmap
     shakeml = shakeml.getroot()
     #find event
@@ -81,6 +81,7 @@ def shakemap2quakemap(shakemlfile):
 
     #get grid
     grid_data = io.StringIO(shakeml.find('grid_data',namespaces = nsmap).text)
+
     grid_data = pandas.read_csv(grid_data,sep=' ',header=None)
     grid_data.columns = columns
 
@@ -219,6 +220,7 @@ def quakemap2shakeml(qm,provider='GFZ'):
 
     #grid data
     grid_data=le.SubElement(shakeml,'grid_data',nsmap=nsmap)
-    grid_data.text = '\n'+shakemap.to_string(header=False,index=False,justify='left')
+    grid_data.text = '\n'+shakemap.to_csv(sep=' ',header=False, index=False)
+    #grid_data.text = '\n'+shakemap.to_string(header=False,index=False,justify='left')
 
     return le.tostring(shakeml,pretty_print=True,encoding='unicode')
