@@ -55,8 +55,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     an intensity type(available in OpenQuake): imt
     using a GMPE(available in OpenQuake): gmpe
     at sites that can be defined through:
-     sites: a pandas dataframe with columns lon, lat, vs30, (optional: vs30measured, z1pt0, z2pt5, backarc)
-            Note: can also be a dictionary
+     sites: a shakeml sites-file at least columns longitude, latitude, vs30, (optional: vs30measured, z1pt0, z2pt5, backarc)
      roi  : a region of interest [lonmin,lonmax,latmin,latmax]
             (if no additional sites are provided, will use global vs30 grid from USGS), can be used to filter provided sites
      pgamin: sites can be selected from usgs vs30 grid based on
@@ -97,13 +96,21 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
             sites = sml.get_vs30_sites_from_bbox(droi)
     else:
         #sites provided
-        if sites == pandas.core.frame.DataFrame:
-            #convert to dictionary
-            sites = sites.to_dict('list')
-        elif type(sites) == dict:
-            pass
-        else:
-            raise Exception('Unexpected data type for provided sites: {}'.format(type(sites)))
+        #if sites == pandas.core.frame.DataFrame:
+        #    #convert to dictionary
+        #    sites = sites.to_dict('list')
+        #elif type(sites) == dict:
+        #    pass
+        #else:
+        #    raise Exception('Unexpected data type for provided sites: {}'.format(type(sites)))
+        #keep copy
+        sites_params = sites
+        #convert to dictionary (lower case strings)
+        sites = sites_params.sites
+        sites.columns=[s.lower() for s in list(sites.columns)]
+        sites = sites.to_dict('list')
+        #TODO: ENSURE UNITS ARE CORRECT!!
+
         #filter in case
         if roi!=None:
             sites = filter_sites(sites,roi)
