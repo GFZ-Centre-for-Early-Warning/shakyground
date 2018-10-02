@@ -84,6 +84,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
 
     #check for sites
     if sites==None:
+        regular_grid=True
         #get sites form USGS topo
         if roi!=None:
             sites = sml.get_vs30_sites_from_bbox(roi)
@@ -109,6 +110,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
         sites = sites_params.sites
         sites.columns=[s.lower() for s in list(sites.columns)]
         sites = sites.to_dict('list')
+        regular_grid = sites.regular_grid
         #TODO: ENSURE UNITS ARE CORRECT!!
 
         #filter in case
@@ -162,7 +164,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     event_specific_uncertainty["value"]=[0., 0., 0., 0., 0., 0.]
     event_specific_uncertainty["numsta"]=["","","","","",""]
 
-    quakemap=shakeml.quakemap(event,event_specific_uncertainty,sm,units)
+    quakemap=shakeml.quakemap(event,event_specific_uncertainty,sm,units,regular_grid)
 
     #convert to shakeml format and return
     return shakeml.quakemap2shakeml(quakemap,provider='GFZ')
