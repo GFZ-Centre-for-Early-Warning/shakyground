@@ -47,7 +47,7 @@ def shakemap2quakemap(shakemlfile):
     except:
         #maybe string
         parser = le.XMLParser(huge_tree=True)
-        shakeml = le.parse(io.StringIO(shakemlfile),parser)
+        shakeml = le.parse(io.BytesIO(shakemlfile),parser)
     nsmap = shakeml.getroot().nsmap
     shakeml = shakeml.getroot()
     #find event
@@ -71,6 +71,9 @@ def shakemap2quakemap(shakemlfile):
         event['magnitude'] = float(smevent.attrib['magnitude'])
         event['longitude'] = float(smevent.attrib['lon'])
         event['latitude'] = float(smevent.attrib['lat'])
+        #event['strike'] = float(smevent.attrib['strike'])
+        #event['dip'] = float(smevent.attrib['dip'])
+        #event['rake'] = float(smevent.attrib['rake'])
         event['type'] = shakeml.attrib['shakemap_event_type']
         #FIXME: deal with shakeml.attrib: 'shakemap_id': 'us1000gez7', 'shakemap_version': '2', 'code_version': '3.5.1615', 'process_timestamp': '2018-08-21T23:32:17Z', 'shakemap_originator': 'us', 'map_status': 'RELEASED'
         #FIXME: deal with description
