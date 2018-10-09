@@ -47,7 +47,13 @@ def shakemap2quakemap(shakemlfile):
     except:
         #maybe string
         parser = le.XMLParser(huge_tree=True)
-        shakeml = le.parse(io.BytesIO(shakemlfile),parser)
+        #shakeml = le.parse(io.StringIO(shakemlfile),parser)
+        #shakeml = le.parse(shakemlfile,parser)
+        try:
+            inp = io.BytesIO(shakemlfile)
+        except TypeError:
+            inp = io.StringIO(shakemlfile)
+        shakeml = le.parse(inp,parser)
     nsmap = shakeml.getroot().nsmap
     shakeml = shakeml.getroot()
     #find event
