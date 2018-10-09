@@ -112,7 +112,8 @@ def get_vs30_sites_from_bbox(bbox, isep="\t"):
     """
     Returns a basic site dictionary from a bbox [llon, ulon, llat, ulat]
     """
-    site_data_path = os.path.join(".", "global_vs30.grd")
+    filepath=os.path.dirname(__file__)
+    site_data_path = os.path.join(filepath, "global_vs30.grd")
     tempfile = "tempfile.grd"
     # Call grdcut
     cutstring = "/".join([str(loc) for loc in bbox])
@@ -120,7 +121,7 @@ def get_vs30_sites_from_bbox(bbox, isep="\t"):
                     "-G{:s}".format(tempfile),
                     "-R{:s}".format(cutstring)])
     # Call grd2xyz
-    tempxyz = "tempfile.xyz"
+    tempxyz = os.path.join(filepath,"tempfile.xyz")
     subprocess.run(["gmt", "grd2xyz", tempfile, "-sa", ">", tempxyz])
     # Use pandas to read in the xyzdata
     site_data = pd.read_csv(tempxyz, sep=isep)
