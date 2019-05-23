@@ -162,8 +162,8 @@ def quakemap2shakeml(qm,provider='GFZ'):
     schemaLocation = le.QName("{" + nsmap['xsi'] + "}schemaLocation")
 
     #processing attributes
-    shakemap_tool = le.QName("shakemap_tool")
-    code_version = le.QName("tool_version")
+    code_version = le.QName("code_version")
+    shakemap_version = le.QName("shakemap_version")
     process_timestamp = le.QName("process_timestamp")
     shakemap_originator = le.QName("shakemap_originator")
     now = datetime.datetime.utcnow()
@@ -175,8 +175,8 @@ def quakemap2shakeml(qm,provider='GFZ'):
                              #FIXME: same as eventID!? No should be related to measure, gmpe etc....
                              #shakemap_id: event.eventID,
                              #NOTE: not shakemap standard
-                             shakemap_tool: 'shakyground',
-                             code_version: '0.1',
+                             code_version: 'shakyground 0.1',
+                             shakemap_version: '1',
                              process_timestamp: quakeml.event2utc(now),
                              shakemap_originator: provider,
                              #map_status: 'RELEASED',
@@ -193,16 +193,16 @@ def quakemap2shakeml(qm,provider='GFZ'):
                              #FIXME: same as eventID!? No should be related to measure, gmpe etc....
                              shakemap_id: event.eventID,
                              #NOTE: not shakemap standard
-                             shakemap_tool: 'shakyground',
-                             code_version: '0.1',
+                             code_version: 'shakyground 0.1',
+                             shakemap_version: '1',
                              process_timestamp: quakeml.event2utc(now),
                              shakemap_originator: provider,
                              map_status: 'RELEASED',
                              shakemap_event_type: event.type,
                             }, nsmap=nsmap)
 
-    #write event data
-    #<event event_id="us1000gez7" magnitude="7.3" depth="123.18" lat="10.739200" lon="-62.910600" event_timestamp="2018-08-21T21:31:42UTC"                  event_network="us" event_description="OFFSHORE SUCRE, VENEZUELA" />
+        # write event data
+        # <event event_id="us1000gez7" magnitude="7.3" depth="123.18" lat="10.739200" lon="-62.910600" event_timestamp="2018-08-21T21:31:42UTC"                  event_network="us" event_description="OFFSHORE SUCRE, VENEZUELA" />
         magnitude = le.QName("magnitude")
         depth = le.QName("depth")
         lat = le.QName("lat")
@@ -222,6 +222,47 @@ def quakemap2shakeml(qm,provider='GFZ'):
                                 },
                                 nsmap=nsmap
                                )
+
+    # write metadata on grid
+    # <grid_specification lon_min="-67.910600" lat_min="5.829200" lon_max="-57.910600" lat_max="15.649200" nominal_lon_spacing="0.016667" nominal_lat_spacing="0.016672" nlon="601" nlat="590" />
+    lon_min = le.QName("lon_min")
+    lat_min = le.QName("lat_min")
+    lon_max = le.QName("lon_max")
+    lat_max = le.QName("lat_max")
+    nominal_lon_spacing = le.QName("nominal_lon_spacing")
+    nominal_lat_spacing = le.QName("nominal_lat_spacing")
+    nlon = le.QName("nlon")
+    nlat = le.QName("nlat")
+    reg_grid = le.QName("regular_grid")
+    # get plon and plat
+    if regular_grid:
+        grid_specification = le.SubElement(shakeml, 'grid_specification',
+                                           {lon_min: str(shakemap.LON.min()),
+                                            lat_min: str(shakemap.LAT.min()),
+                                            lon_max: str(shakemap.LON.max()),
+                                            lat_max: str(shakemap.LAT.max()),
+                                            nominal_lon_spacing: str(
+                                                round(abs(np.mean(np.diff(shakemap.LON.unique())[:-1])), 6)),
+                                            nominal_lat_spacing: str(
+                                                round(abs(np.mean(np.diff(shakemap.LAT.unique())[:-1])), 6)),
+                                            nlon: str(len(shakemap.LON.unique())),
+                                            nlat: str(len(shakemap.LAT.unique())),
+                                            reg_grid: '1'
+                                            },
+                                           nsmap=nsmap
+                                           )
+    else:
+        grid_specification = le.SubElement(shakeml, 'grid_specification',
+                                           {lon_min: str(shakemap.LON.min()),
+                                            lat_min: str(shakemap.LAT.min()),
+                                            lon_max: str(shakemap.LON.max()),
+                                            lat_max: str(shakemap.LAT.max()),
+                                            reg_grid: '0'
+                                            },
+                                           nsmap=nsmap
+                                           )
+
+    if not siteml:
         #FIXME: which use somewhere on our side??
         #<event_specific_uncertainty name="pga" value="0.000000" numsta="" />
         #<event_specific_uncertainty name="pgv" value="0.000000" numsta="" />
@@ -239,42 +280,6 @@ def quakemap2shakeml(qm,provider='GFZ'):
                                                        value: str(event_specific_uncertainty.iloc[i]["value"]),
                                                        numsta:str(event_specific_uncertainty.iloc[i]["numsta"])},
                                                       nsmap=nsmap))
-    #write metadata on grid
-    #<grid_specification lon_min="-67.910600" lat_min="5.829200" lon_max="-57.910600" lat_max="15.649200" nominal_lon_spacing="0.016667" nominal_lat_spacing="0.016672" nlon="601" nlat="590" />
-    lon_min = le.QName("lon_min")
-    lat_min = le.QName("lat_min")
-    lon_max = le.QName("lon_max")
-    lat_max = le.QName("lat_max")
-    nominal_lon_spacing = le.QName("nominal_lon_spacing")
-    nominal_lat_spacing = le.QName("nominal_lat_spacing")
-    nlon = le.QName("nlon")
-    nlat = le.QName("nlat")
-    reg_grid = le.QName("regular_grid")
-    #get plon and plat
-    if regular_grid:
-        grid_specification = le.SubElement(shakeml,'grid_specification',
-                               {lon_min: str(shakemap.LON.min()),
-                                lat_min: str(shakemap.LAT.min()),
-                                lon_max: str(shakemap.LON.max()),
-                                lat_max: str(shakemap.LAT.max()),
-                                nominal_lon_spacing: str(round(abs(np.mean(np.diff(shakemap.LON.unique())[:-1])),6)),
-                                nominal_lat_spacing: str(round(abs(np.mean(np.diff(shakemap.LAT.unique())[:-1])),6)),
-                                nlon:str(len(shakemap.LON.unique())),
-                                nlat:str(len(shakemap.LAT.unique())),
-                                reg_grid: str(regular_grid)
-                                },
-                               nsmap=nsmap
-                               )
-    else:
-        grid_specification = le.SubElement(shakeml,'grid_specification',
-                               {lon_min: str(shakemap.LON.min()),
-                                lat_min: str(shakemap.LAT.min()),
-                                lon_max: str(shakemap.LON.max()),
-                                lat_max: str(shakemap.LAT.max()),
-                                reg_grid: str(regular_grid)
-                                },
-                               nsmap=nsmap
-                               )
 
     #grid field specification
     #<grid_field index="1" name="LON" units="dd" />

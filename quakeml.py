@@ -4,6 +4,9 @@
 import pandas
 import lxml.etree as le
 
+# example value, will be set later by quakeml2events
+QUAKEML_NSMAP = {None: 'http://quakeml.org/xmlns/bed/1.2'}
+
 #TODO: publicID in quakeml should refer to webservice address
 
 def event2utc(event):
@@ -94,6 +97,28 @@ def events2quakeml(catalog,provider='GFZ'):
     #return str(le.tostring(quakeml,pretty_print=True,xml_declaration=True),encoding='utf-8')
     return le.tostring(quakeml,pretty_print=True,encoding='unicode')
 
+
+def find_element(element, which):
+    '''
+    :type element: xml.etree.ElementTree.Element
+    :type which: str
+    :rtype: xml.etree.ElementTree.Element
+    '''
+    return element.find(which, namespaces=QUAKEML_NSMAP)
+
+
+def find_text(element, text):
+    '''
+    :type element: xml.etree.ElementTree.Element
+    :type text: str
+    :rtype: str
+    '''
+    return element.findtext(text, namespaces=QUAKEML_NSMAP)
+
+
+def find_text_in_element(element, which, text):
+    return find_text(find_element(element, which), text)
+
 def quakeml2events(quakemlfile,provider='GFZ'):
     '''
     Given a quakeml file/or string returns a pandas dataframe
@@ -108,34 +133,53 @@ def quakeml2events(quakemlfile,provider='GFZ'):
         quakeml = quakemlfile
 
     quakeml = le.fromstring(quakeml)
+
+    global QUAKEML_NSMAP
+    QUAKEML_NSMAP = quakeml.nsmap
+
     #initialize catalog
     index = [i for i in range(len(quakeml))]
     columns=['eventID', 'Agency', 'Identifier', 'year', 'month', 'day', 'hour', 'minute', 'second', 'timeError', 'longitude', 'latitude',              'SemiMajor90', 'SemiMinor90', 'ErrorStrike', 'depth', 'depthError', 'magnitude', 'sigmaMagnitude','rake','dip','strike','type', 'probability',   'fuzzy']
     #columns=['eventID', 'Agency', 'Identifier', 'year', 'month', 'day', 'hour', 'minute', 'second', 'timeError', 'longitude', 'latitude','SemiMajor90', 'SemiMinor90', 'ErrorStrike', 'depth', 'depthError', 'magnitude', 'sigmaMagnitude', 'type', 'probability', 'fuzzy']
     catalog=pandas.DataFrame(index=index,columns=columns)
+
     #add individual events to catalog
     for i,event in enumerate(quakeml):
         #get ID
         catalog.iloc[i].eventID = event.attrib['publicID']
         #type
-        catalog.iloc[i].type = event.find('description').findtext('text')
+        catalog.iloc[i].type = find_text_in_element(event, 'description', 'text')
         #origin
-        origin = event.find('origin')
+        origin = find_element(event, 'origin')
         #time
-        catalog.iloc[i].year,catalog.iloc[i].month,catalog.iloc[i].day,catalog.iloc[i].hour,catalog.iloc[i].minute,catalog.iloc[i].second = utc2event(origin.find('time').findtext('value'))
+        timevalue = find_text_in_element(origin, 'time', 'value')
+        catalog.iloc[i].year,catalog.iloc[i].month,catalog.iloc[i].day,catalog.iloc[i].hour,catalog.iloc[i].minute,catalog.iloc[i].second = utc2event(timevalue)
         #latitude/longitude/depth
-        catalog.iloc[i].latitude = float(origin.find('latitude').findtext('value'))
-        catalog.iloc[i].longitude = float(origin.find('longitude').findtext('value'))
-        catalog.iloc[i].depth = float(origin.find('depth').findtext('value'))
+        catalog.iloc[i].latitude = float(find_text_in_element(origin, 'latitude', 'value'))
+        catalog.iloc[i].longitude = float(find_text_in_element(origin, 'longitude', 'value'))
+        catalog.iloc[i].depth = float(find_text_in_element(origin, 'depth', 'value'))
         #agency/provider
-        catalog.iloc[i].agency = origin.find('creationInfo').findtext('value')
+        catalog.iloc[i].agency = find_text_in_element(origin, 'creationInfo', 'value')
         #magnitude
-        catalog.iloc[i].magnitude = float(event.find('magnitude').find('mag').findtext('value'))
+        mag = find_element(event, 'magnitude')
+        catalog.iloc[i].magnitude = float(find_text_in_element(mag, 'mag', 'value'))
         #plane
-        nodalPlanes = event.find('focalMechanism').find('nodalPlanes')
-        preferredPlane = nodalPlanes.findtext('preferredPlane')
-        catalog.iloc[i].strike = float(nodalPlanes.find(preferredPlane).find('strike').findtext('value'))
-        catalog.iloc[i].dip = float(nodalPlanes.find(preferredPlane).find('dip').findtext('value'))
-        catalog.iloc[i].rake = float(nodalPlanes.find(preferredPlane).find('rake').findtext('value'))
+        focal = find_element(event, 'focalMechanism')
+        nodalPlanes = find_element(focal, 'nodalPlanes')
+        preferredPlane = nodalPlanes.attrib['preferredPlane']
+
+        if preferredPlane == 1:
+            preferredPlane = 'nodalPlane1'
+        elif preferredPlane == 2:
+            preferredPlane = 'nodalPlane2'
+
+        preferredPlaneElm = find_element(nodalPlanes, preferredPlane)
+
+        if preferredPlaneElm is None:
+            continue
+
+        catalog.iloc[i].strike = float(find_text_in_element(preferredPlaneElm, 'strike', 'value'))
+        catalog.iloc[i].dip = float(find_text_in_element(preferredPlaneElm, 'dip', 'value'))
+        catalog.iloc[i].rake = float(find_text_in_element(preferredPlaneElm, 'rake', 'value'))
 
     return catalog
