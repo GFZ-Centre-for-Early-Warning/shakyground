@@ -261,7 +261,7 @@ def quakemap2shakeml(qm,provider='GFZ'):
                                 nominal_lat_spacing: str(round(abs(np.mean(np.diff(shakemap.LAT.unique())[:-1])),6)),
                                 nlon:str(len(shakemap.LON.unique())),
                                 nlat:str(len(shakemap.LAT.unique())),
-                                reg_grid: str(regular_grid)
+                                reg_grid: '1'
                                 },
                                nsmap=nsmap
                                )
@@ -271,7 +271,7 @@ def quakemap2shakeml(qm,provider='GFZ'):
                                 lat_min: str(shakemap.LAT.min()),
                                 lon_max: str(shakemap.LON.max()),
                                 lat_max: str(shakemap.LAT.max()),
-                                reg_grid: str(regular_grid)
+                                reg_grid: '0'
                                 },
                                nsmap=nsmap
                                )
