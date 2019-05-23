@@ -162,8 +162,8 @@ def quakemap2shakeml(qm,provider='GFZ'):
     schemaLocation = le.QName("{" + nsmap['xsi'] + "}schemaLocation")
 
     #processing attributes
-    shakemap_tool = le.QName("shakemap_tool")
-    code_version = le.QName("tool_version")
+    code_version = le.QName("code_version")
+    shakemap_version = le.QName("shakemap_version")
     process_timestamp = le.QName("process_timestamp")
     shakemap_originator = le.QName("shakemap_originator")
     now = datetime.datetime.utcnow()
@@ -175,8 +175,8 @@ def quakemap2shakeml(qm,provider='GFZ'):
                              #FIXME: same as eventID!? No should be related to measure, gmpe etc....
                              #shakemap_id: event.eventID,
                              #NOTE: not shakemap standard
-                             shakemap_tool: 'shakyground',
-                             code_version: '0.1',
+                             code_version: 'shakyground 0.1',
+                             shakemap_version: '1',
                              process_timestamp: quakeml.event2utc(now),
                              shakemap_originator: provider,
                              #map_status: 'RELEASED',
@@ -193,8 +193,8 @@ def quakemap2shakeml(qm,provider='GFZ'):
                              #FIXME: same as eventID!? No should be related to measure, gmpe etc....
                              shakemap_id: event.eventID,
                              #NOTE: not shakemap standard
-                             shakemap_tool: 'shakyground',
-                             code_version: '0.1',
+                             code_version: 'shakyground 0.1',
+                             shakemap_version: '1',
                              process_timestamp: quakeml.event2utc(now),
                              shakemap_originator: provider,
                              map_status: 'RELEASED',
