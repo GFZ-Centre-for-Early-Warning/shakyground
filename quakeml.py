@@ -116,7 +116,12 @@ def find_text(element, text):
 
 
 def find_text_in_element(element, which, text):
-    return find_text(find_element(element, which), text)
+    elm = find_element(element, which)
+
+    if elm is None:
+        return None
+
+    return find_text(elm, text)
 
 def quakeml2events(quakemlfile,provider='GFZ'):
     '''
