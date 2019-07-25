@@ -1,0 +1,65 @@
+<eventParameters publicID="quakeml:quakeledger/0" xmlns="http://quakeml.org/xmlns/bed/1.2">
+  <event publicID="quakeml:quakeledger/84945">
+    <preferredOriginID>quakeml:quakeledger/84945</preferredOriginID>
+    <preferredMagnitudeID>quakeml:quakeledger/84945</preferredMagnitudeID>
+    <type>earthquake</type>
+    <description>
+      <text>stochastic</text>
+    </description>
+    <origin publicID="quakeml:quakeledger/84945">
+      <time>
+        <value>16773-01-01T00:00:00.000000Z</value>
+        <uncertainty>NaN</uncertainty>
+      </time>
+      <latitude>
+        <value>-30.9227</value>
+        <uncertainty>NaN</uncertainty>
+      </latitude>
+      <longitude>
+        <value>-71.49875</value>
+        <uncertainty>NaN</uncertainty>
+      </longitude>
+      <depth>
+        <value>34.75117</value>
+        <uncertainty>NaN</uncertainty>
+      </depth>
+      <creationInfo>
+        <author>GFZ</author>
+      </creationInfo>
+      <originUncertainty>
+        <horizontalUncertainty>NaN</horizontalUncertainty>
+        <minHorizontalUncertainty>NaN</minHorizontalUncertainty>
+        <maxHorizontalUncertainty>NaN</maxHorizontalUncertainty>
+        <azimuthMaxHorizontalUncertainty>NaN</azimuthMaxHorizontalUncertainty>
+      </originUncertainty>
+    </origin>
+    <magnitude publicID="quakeml:quakeledger/84945">
+      <mag>
+        <value>8.35</value>
+        <uncertainty>NaN</uncertainty>
+      </mag>
+      <type>MW</type>
+      <creationInfo>
+        <author>GFZ</author>
+      </creationInfo>
+    </magnitude>
+    <focalMechanism publicID="quakeml:quakeledger/84945">
+      <nodalPlanes preferredPlane="1">
+        <nodalPlane1>
+          <strike>
+            <value>7.310981</value>
+            <uncertainty>NaN</uncertainty>
+          </strike>
+          <dip>
+            <value>16.352970000000003</value>
+            <uncertainty>NaN</uncertainty>
+          </dip>
+          <rake>
+            <value>90.0</value>
+            <uncertainty>NaN</uncertainty>
+          </rake>
+        </nodalPlane1>
+      </nodalPlanes>
+    </focalMechanism>
+  </event>
+  </eventParameters>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:sm="http://earthquake.usgs.gov/eqcenter/shakemap"
+	targetNamespace="http://earthquake.usgs.gov/eqcenter/shakemap"
+	elementFormDefault="qualified" xml:lang="en" version="2">
+
+	<annotation>
+		<documentation>
+			WPS is an OGC Standard.
+			Copyright (c) 2015 Open
+			Geospatial Consortium.
+			To obtain additional rights of use, visit
+			http://www.opengeospatial.org/legal/.
+		</documentation>
+	</annotation>
+
+	<element name="shakemap_grid">
+
+		<!-- =========================================================== -->
+		<!-- Definition of shakemap grid -->
+		<!-- =========================================================== -->
+		<complexType>
+			<sequence>
+				<element name="event" type="sm:event_type" maxOccurs="1" />
+				<element name="grid_specification" type="sm:grid_specification_type"
+					maxOccurs="1" />
+				<element name="event_specific_uncertainty" type="sm:event_specific_uncertainty_type"
+					maxOccurs="6" />
+				<element name="grid_field" type="sm:grid_field_type"
+					maxOccurs="11" />
+				<element name="grid_data" type="sm:grid_data_type"
+					maxOccurs="1" />
+			</sequence>
+			<attribute name="event_id" type="string" use="required" />
+			<attribute name="shakemap_id" type="string" use="required" />
+			<attribute name="shakemap_version" type="string" use="required" />
+			<attribute name="code_version" type="string" use="required" />
+			<attribute name="process_timestamp" type="string" use="required" />
+			<attribute name="shakemap_originator" type="string" use="required" />
+			<attribute name="map_status" type="string" use="required" />
+			<attribute name="shakemap_event_type" type="string" use="required" />
+		</complexType>
+	</element>
+
+	<complexType name="event_type">
+		<attribute name="event_id" type="string" use="required" />
+		<attribute name="magnitude" type="string" use="required" />
+		<attribute name="depth" type="string" use="required" />
+		<attribute name="lat" type="string" use="required" />
+		<attribute name="lon" type="string" use="required" />
+		<attribute name="event_timestamp" type="string" use="required" />
+		<attribute name="event_network" type="string" use="required" />
+		<attribute name="event_description" type="string" use="required" />
+	</complexType>
+
+	<complexType name="grid_specification_type">
+		<attribute name="lon_min" type="string" use="required" />
+		<attribute name="lat_min" type="string" use="required" />
+		<attribute name="lon_max" type="string" use="required" />
+		<attribute name="lat_max" type="string" use="required" />
+		<attribute name="nominal_lon_spacing" type="string" use="optional" />
+		<attribute name="nominal_lat_spacing" type="string" use="optional" />
+		<attribute name="nlon" type="string" use="optional" />
+		<attribute name="nlat" type="string" use="optional" />
+		<attribute name="regular_grid" type="boolean" use="optional" />
+	</complexType>
+
+	<complexType name="event_specific_uncertainty_type">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="value" type="string" use="required" />
+		<attribute name="numsta" type="string" use="optional" />
+	</complexType>
+
+	<complexType name="grid_field_type">
+		<attribute name="index" type="int" use="required" />
+		<attribute name="name" type="string" use="required" />
+		<attribute name="units" type="string" use="optional" />
+	</complexType>
+
+	<simpleType name="grid_data_type">
+		<restriction base="string" />
+	</simpleType>
+
+</schema>
