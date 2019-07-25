@@ -1,0 +1,68 @@
+ <ns:eventParameters 
+     xmlns:ns="http://quakeml.org/xmlns/bed/1.2" 
+     publicID="quakeml:quakeledger/0"> 
+    <ns:event publicID="quakeml:quakeledger/206221">
+        <ns:preferredOriginID>quakeml:quakeledger/206221</ns:preferredOriginID>
+        <ns:preferredMagnitudeID>quakeml:quakeledger/206221</ns:preferredMagnitudeID>
+        <ns:type>earthquake</ns:type>
+        <ns:description>
+            <ns:text>stochastic</ns:text>
+        </ns:description>
+        <ns:origin publicID="quakeml:quakeledger/206221">
+            <ns:time>
+                <ns:value>47175-01-01T00:00:00.000000Z</ns:value>
+                <ns:uncertainty>NaN</ns:uncertainty>
+            </ns:time>
+            <ns:latitude>
+                <ns:value>-33.2329</ns:value>
+                <ns:uncertainty>NaN</ns:uncertainty>
+            </ns:latitude>
+            <ns:longitude>
+                <ns:value>-71.0003</ns:value>
+                <ns:uncertainty>NaN</ns:uncertainty>
+            </ns:longitude>
+            <ns:depth>
+                <ns:value>12.0</ns:value>
+                <ns:uncertainty>NaN</ns:uncertainty>
+            </ns:depth>
+            <ns:creationInfo>
+                <ns:author>GFZ</ns:author>
+            </ns:creationInfo>
+            <ns:originUncertainty>
+                <ns:horizontalUncertainty>NaN</ns:horizontalUncertainty>
+                <ns:minHorizontalUncertainty>NaN</ns:minHorizontalUncertainty>
+                <ns:maxHorizontalUncertainty>NaN</ns:maxHorizontalUncertainty>
+                <ns:azimuthMaxHorizontalUncertainty>NaN</ns:azimuthMaxHorizontalUncertainty>
+            </ns:originUncertainty>
+        </ns:origin>
+        <ns:magnitude publicID="quakeml:quakeledger/206221">
+            <ns:mag>
+                <ns:value>7.25</ns:value>
+                <ns:uncertainty>NaN</ns:uncertainty>
+            </ns:mag>
+            <ns:type>MW</ns:type>
+            <ns:creationInfo>
+                <ns:author>GFZ</ns:author>
+            </ns:creationInfo>
+        </ns:magnitude>
+        <ns:focalMechanism publicID="quakeml:quakeledger/206221">
+            <ns:nodalPlanes preferredPlane="1">
+                <ns:nodalPlane1>
+                    <ns:strike>
+                        <ns:value>90.13811</ns:value>
+                        <ns:uncertainty>NaN</ns:uncertainty>
+                    </ns:strike>
+                    <ns:dip>
+                        <ns:value>60.000659999999996</ns:value>
+                        <ns:uncertainty>NaN</ns:uncertainty>
+                    </ns:dip> 
+                    <ns:rake>
+                        <ns:value>90.0</ns:value>
+                        <ns:uncertainty>NaN</ns:uncertainty>
+                    </ns:rake>
+                </ns:nodalPlane1>
+            </ns:nodalPlanes>
+        </ns:focalMechanism>
+    </ns:event>
+</ns:eventParameters>
+
