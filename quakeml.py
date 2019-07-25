@@ -5,7 +5,7 @@ import pandas
 import lxml.etree as le
 
 # example value, will be set later by quakeml2events
-QUAKEML_NSMAP = {None: 'http://quakeml.org/xmlns/bed/1.2'}
+NS_QUAKEML = 'http://quakeml.org/xmlns/bed/1.2'
 
 #TODO: publicID in quakeml should refer to webservice address
 
@@ -36,62 +36,61 @@ def events2quakeml(catalog,provider='GFZ'):
     the catalog
     '''
     #TODO: add uncertainty to all values (NOTE: OQ/HMTK style spatial uncertainty is ellipse semi-major/semi-minor/strike-error)
-    xml_namespace = 'http://quakeml.org/xmlns/quakeml/1.2'
-    quakeml = le.Element('eventParameters',namespace=xml_namespace)
+    quakeml = le.Element('eventParameters',namespace=NS_QUAKEML)
     #go through all events
     for i in range(len(catalog)):
         quake = catalog.iloc[i]
         event = le.SubElement(quakeml,'event',{'publicID':str(quake.eventID)})
-        preferredOriginID = le.SubElement(event,'preferredOriginID')
+        preferredOriginID = le.SubElement(event,'preferredOriginID', namespace=NS_QUAKEML)
         preferredOriginID.text=str(quake.eventID)
-        preferredMagnitudeID = le.SubElement(event,'preferredMagnitudeID')
+        preferredMagnitudeID = le.SubElement(event,'preferredMagnitudeID', namespace=NS_QUAKEML)
         preferredMagnitudeID.text=str(quake.eventID)
-        qtype = le.SubElement(event,'type')
+        qtype = le.SubElement(event,'type', namespace=NS_QUAKEML)
         qtype.text = 'earthquake'
-        description = le.SubElement(event,'description')
-        text = le.SubElement(description,'text')
+        description = le.SubElement(event,'description', namespace=NS_QUAKEML)
+        text = le.SubElement(description,'text', namespace=NS_QUAKEML)
         text.text = str(quake.type)
         #origin
-        origin = le.SubElement(event,'origin',{'publicID':str(quake.eventID)})
-        time = le.SubElement(origin,'time')
-        value = le.SubElement(time,'value')
+        origin = le.SubElement(event,'origin', {'publicID':str(quake.eventID)}, namespace=NS_QUAKEML)
+        time = le.SubElement(origin,'time', namespace=NS_QUAKEML)
+        value = le.SubElement(time,'value', namespace=NS_QUAKEML)
         value.text = event2utc(quake)
-        latitude = le.SubElement(origin,'latitude')
-        value = le.SubElement(latitude,'value')
+        latitude = le.SubElement(origin,'latitude', namespace=NS_QUAKEML)
+        value = le.SubElement(latitude,'value', namespace=NS_QUAKEML)
         value.text = str(quake.latitude)
-        longitude = le.SubElement(origin,'longitude')
-        value = le.SubElement(longitude,'value')
+        longitude = le.SubElement(origin,'longitude', namespace=NS_QUAKEML)
+        value = le.SubElement(longitude,'value', namespace=NS_QUAKEML)
         value.text = str(quake.longitude)
-        depth = le.SubElement(origin,'depth')
-        value = le.SubElement(depth,'value')
+        depth = le.SubElement(origin,'depth', namespace=NS_QUAKEML)
+        value = le.SubElement(depth,'value', namespace=NS_QUAKEML)
         value.text = str(quake.depth)
-        creationInfo = le.SubElement(origin,'creationInfo')
-        author = le.SubElement(creationInfo,'value')
+        creationInfo = le.SubElement(origin,'creationInfo', namespace=NS_QUAKEML)
+        author = le.SubElement(creationInfo,'value', namespace=NS_QUAKEML)
         author.text = provider
         #magnitude
-        magnitude = le.SubElement(event,'magnitude',{'publicID':str(quake.eventID)})
-        mag = le.SubElement(magnitude,'mag')
-        value = le.SubElement(mag,'value')
+        magnitude = le.SubElement(event,'magnitude',{'publicID':str(quake.eventID)}, namespace=NS_QUAKEML)
+        mag = le.SubElement(magnitude,'mag', namespace=NS_QUAKEML)
+        value = le.SubElement(mag,'value', namespace=NS_QUAKEML)
         value.text = str(quake.magnitude)
-        mtype = le.SubElement(magnitude,'type')
+        mtype = le.SubElement(magnitude,'type', namespace=NS_QUAKEML)
         mtype.text = 'MW'
-        creationInfo = le.SubElement(magnitude,'creationInfo')
-        author = le.SubElement(creationInfo,'value')
+        creationInfo = le.SubElement(magnitude,'creationInfo', namespace=NS_QUAKEML)
+        author = le.SubElement(creationInfo,'value', namespace=NS_QUAKEML)
         author.text = provider
         #plane (write only fault plane not auxilliary)
-        focalMechanism = le.SubElement(event,'focalMechanism',{'publicID':str(quake.eventID)})
-        nodalPlanes = le.SubElement(focalMechanism,'nodalPlanes')
-        nodalPlane1 = le.SubElement(nodalPlanes,'nodalPlane1')
-        strike = le.SubElement(nodalPlane1,'strike')
-        value  = le.SubElement(strike,'value')
+        focalMechanism = le.SubElement(event,'focalMechanism',{'publicID':str(quake.eventID)}, namespace=NS_QUAKEML)
+        nodalPlanes = le.SubElement(focalMechanism,'nodalPlanes', namespace=NS_QUAKEML)
+        nodalPlane1 = le.SubElement(nodalPlanes,'nodalPlane1', namespace=NS_QUAKEML)
+        strike = le.SubElement(nodalPlane1,'strike', namespace=NS_QUAKEML)
+        value  = le.SubElement(strike,'value', namespace=NS_QUAKEML)
         value.text = str(quake.strike)
-        dip = le.SubElement(nodalPlane1,'dip')
-        value  = le.SubElement(dip,'value')
+        dip = le.SubElement(nodalPlane1,'dip', namespace=NS_QUAKEML)
+        value  = le.SubElement(dip,'value', namespace=NS_QUAKEML)
         value.text = str(quake.dip)
-        rake = le.SubElement(nodalPlane1,'rake')
-        value  = le.SubElement(rake,'value')
+        rake = le.SubElement(nodalPlane1,'rake', namespace=NS_QUAKEML)
+        value  = le.SubElement(rake,'value', namespace=NS_QUAKEML)
         value.text = str(quake.rake)
-        preferredPlane = le.SubElement(nodalPlanes,'preferredPlane')
+        preferredPlane = le.SubElement(nodalPlanes,'preferredPlane', namespace=NS_QUAKEML)
         preferredPlane.text = 'nodalPlane1'
 
     #return str(le.tostring(quakeml,pretty_print=True,xml_declaration=True),encoding='utf-8')
@@ -104,7 +103,7 @@ def find_element(element, which):
     :type which: str
     :rtype: xml.etree.ElementTree.Element
     '''
-    return element.find(which, namespaces=QUAKEML_NSMAP)
+    return element.find('{' + NS_QUAKEML + '}' + which)
 
 
 def find_text(element, text):
@@ -113,7 +112,7 @@ def find_text(element, text):
     :type text: str
     :rtype: str
     '''
-    return element.findtext(text, namespaces=QUAKEML_NSMAP)
+    return element.findtext('{' + NS_QUAKEML + '}' + text)
 
 
 def find_text_in_element(element, which, text):
@@ -133,9 +132,6 @@ def quakeml2events(quakemlfile,provider='GFZ'):
         quakeml = quakemlfile
 
     quakeml = le.fromstring(quakeml)
-
-    global QUAKEML_NSMAP
-    QUAKEML_NSMAP = quakeml.nsmap
 
     #initialize catalog
     index = [i for i in range(len(quakeml))]
