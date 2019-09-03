@@ -15,3 +15,7 @@ psutil
 
 #service can be run with the Test/test.xml (quakeml) event like:
 python3 service.py Test/test.xml
+
+# You can look up some documentation about the used grid file for share wave velocity
+# on the usgs website
+# https://earthquake.usgs.gov/data/vs30/
