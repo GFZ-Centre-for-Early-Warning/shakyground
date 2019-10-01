@@ -5,3 +5,4 @@ dbfile.hdf5
 global_vs30.grd
 gmt.history
 test.xml
+.DS_Store
