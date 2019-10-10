@@ -7,7 +7,7 @@ import subprocess
 import h5py
 import numpy as np
 import pandas as pd
-from openquake.hazardlib.geo import Point, PlanarSurface, MultiSurface, Mesh
+from openquake.hazardlib.geo import Point, PlanarSurface, NodalPlane, MultiSurface, Mesh
 from openquake.hazardlib.gsim import get_available_gsims
 from openquake.hazardlib.imt import PGA, PGV, SA, from_string
 from openquake.hazardlib.contexts import (ContextMaker, get_distances,
@@ -16,6 +16,7 @@ from openquake.hazardlib.source.rupture import ParametricProbabilisticRupture
 from openquake.hazardlib.site import Site, SiteCollection
 from openquake.hazardlib.scalerel.wc1994 import WC1994
 from openquake.hazardlib import const
+from openquake.hazardlib.pmf import PMF
 import synthetic_rupture_generator as srg
 
 
@@ -153,7 +154,8 @@ class Event(object):
         self.strike = strike
         self.dip = dip
         self.rake = rake
-        self.mechanism = []
+        #self.mechanism = []
+        self.mechanism = [({"strike": strike, "dip": dip, "rake": rake}, 1.)]
             #({"strike": strike, "dip": dip, "rake": rake}, 1.)]
         self.aspect = aspect
         self.msr = msr
@@ -185,9 +187,9 @@ class Event(object):
                 # Define a set of rupture mechanisms with weight
                 mechanisms = []
                 for mech, weight in self.mechanism:
-                    npd = NodalPlane(self.mechanism["strike"],
-                                     self.mechanism["dip"],
-                                     self.mechanism["rake"])
+                    npd = NodalPlane(mech["strike"],
+                                     mech["dip"],
+                                     mech["rake"])
                     mechanisms.append((weight, npd))
                 mechanisms = PMF(mechanisms)
             else:
