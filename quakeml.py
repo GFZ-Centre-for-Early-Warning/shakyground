@@ -169,9 +169,9 @@ def quakeml2events(quakemlfile,provider='GFZ'):
         nodalPlanes = find_element(focal, 'nodalPlanes')
         preferredPlane = nodalPlanes.attrib['preferredPlane']
 
-        if preferredPlane == 1:
+        if preferredPlane == '1':
             preferredPlane = 'nodalPlane1'
-        elif preferredPlane == 2:
+        elif preferredPlane == '1':
             preferredPlane = 'nodalPlane2'
 
         preferredPlaneElm = find_element(nodalPlanes, preferredPlane)
