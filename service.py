@@ -48,7 +48,7 @@ def filter_sites(sites,roi):
     #filter
     return sites[(sites.lon >= roi[0]) & (sites.lon <= roi[1]) & (sites.lat >= roi[2]) & (sites.lat <= roi[3])].to_dict('list')
 
-def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None, roi=None, pgamin=None):
+def event_shakemap(quakemlfile,imt = ["PGA"],gmpe = "BindiEtAl2014Rjb", sites=None, roi=None, pgamin=None):
     '''
     Takes an event defined in quakeml: quakemlfile (can be file or string)
     and returns a shakemap calculated for
@@ -68,6 +68,26 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     event = quakeml.quakeml2events(quakemlfile,provider='GFZ')
     #if more than one limit to first
     event = event.iloc[0]
+    #create oq event
+    eid = "EQ001"
+    if any(np.isnan(list(event[['longitude','latitude','depth']]))):
+        raise Exception('Need at lest hypocenter of event:\n{}'.format(event))
+    if any(np.isnan(list(event[['strike','dip','rake']]))):
+        oqevent = sml.Event(eid, event.longitude, event.latitude, hypo_depth=event.depth, mag=event.magnitude)
+        rupture = False
+    else:
+        oqevent = sml.Event(eid, event.longitude, event.latitude, hypo_depth=event.depth, mag=event.magnitude, strike=event.strike, dip=event.dip, rake=event.rake)
+        rupture = True
+    #generate rupture
+    rupt = oqevent.get_rupture()
+    
+    # Setup the shakemap tool with the desired GMPEs and - only needs to be done once.
+    # Note that modification to consider different sets of GMPEs organised by tectonic region is simple
+    shakemap = sml.ShakemapLite("dbfile.hdf5", [gmpe], imt)
+    # Deletes any existing database of the same name
+    shakemap.reset()
+
+
     if pgamin!=None:
         val=pgamin
     else:
@@ -78,7 +98,11 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     dlat = d/111.2 #deg
     dlon = d/111.2*np.cos(event.latitude/180*np.pi) #deg
     #roi rounded to 0.0001 (gmt precision for grdcut)
-    droi = [event.longitude-dlon,event.longitude+dlon,event.latitude-dlat,event.latitude+dlat]
+    #get the bounding box of the rupture
+    rupt_bb = rupt.surface.get_bounding_box()
+    #extend the bounding box by the computed distance to get the shakemap extent
+    droi = [rupt_bb.west-dlon,rupt_bb.east+dlon,rupt_bb.south-dlat,rupt_bb.north+dlat]
+    #droi = [event.longitude-dlon,event.longitude+dlon,event.latitude-dlat,event.latitude+dlat]
     #droi = [round(v,3) for v in droi]
     #droi = [np.floor((event.longitude-dlon)*10.)/10.,np.ceil((event.longitude+dlon)*10.)/10.,np.floor((event.latitude-dlat)*10.)/10.,np.ceil((event.latitude+dlat)*10.)/10.]
 
@@ -120,25 +144,6 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
             #slice sites from vs30
             sites = sml.get_vs30_sites_from_bbox(droi)
 
-    #create oq event
-    eid = "EQ001"
-    if any(np.isnan(list(event[['longitude','latitude','depth']]))):
-        raise Exception('Need at lest hypocenter of event:\n{}'.format(event))
-    if any(np.isnan(list(event[['strike','dip','rake']]))):
-        oqevent = sml.Event(eid, event.longitude, event.latitude, hypo_depth=event.depth, mag=event.magnitude)
-        rupture = False
-    else:
-        oqevent = sml.Event(eid, event.longitude, event.latitude, hypo_depth=event.depth, mag=event.magnitude, strike=event.strike, dip=event.dip, rake=event.rake)
-        rupture = True
-
-    #generate rupture
-    rupt = oqevent.get_rupture()
-
-    # Setup the shakemap tool with the desired GMPEs and - only needs to be done once.
-    # Note that modification to consider different sets of GMPEs organised by tectonic region is simple
-    shakemap = sml.ShakemapLite("dbfile.hdf5", [gmpe], [imt])
-    # Deletes any existing database of the same name
-    shakemap.reset()
     # Runs the shakemap for a given event and site configuration
     shakemap(oqevent, sites)
 
@@ -146,8 +151,10 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     sm = pandas.DataFrame()
     sm["LON"] = sites["lon"]
     sm["LAT"] = sites["lat"]
-    sm["PGA"] = shakemap["{}/{}/{}/{}".format(eid,gmpe,imt,'median')]
-    sm["STDPGA"] = shakemap["{}/{}/{}/{}".format(eid,gmpe,imt,'sigma')]
+    for im in imt:
+        sm[im] = shakemap["{}/{}/{}/{}".format(eid,gmpe,im,'median')]
+        sm["STD"+im] = shakemap["{}/{}/{}/{}".format(eid,gmpe,im,'sigma')]
+
 
     #units
     #FIXME: Check how OQ can return unit for GMPE
@@ -156,6 +163,10 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None
     units["LAT"]=['dd']
     units["PGA"]=['g']
     units["STDPGA"]=['g']
+    for im in imt:
+        if im.startswith("SA("):
+            units[im]=['g']
+            units["STD"+im]=['g']
     units = units.iloc[0]
 
     #FIXME: Handle somehow (even necessary)!?
