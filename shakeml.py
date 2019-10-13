@@ -77,9 +77,9 @@ def shakemap2quakemap(shakemlfile):
         event['magnitude'] = float(smevent.attrib['magnitude'])
         event['longitude'] = float(smevent.attrib['lon'])
         event['latitude'] = float(smevent.attrib['lat'])
-        #event['strike'] = float(smevent.attrib['strike'])
-        #event['dip'] = float(smevent.attrib['dip'])
-        #event['rake'] = float(smevent.attrib['rake'])
+        event['strike'] = float(smevent.attrib['strike'])
+        event['dip'] = float(smevent.attrib['dip'])
+        event['rake'] = float(smevent.attrib['rake'])
         event['type'] = shakeml.attrib['shakemap_event_type']
         #FIXME: deal with shakeml.attrib: 'shakemap_id': 'us1000gez7', 'shakemap_version': '2', 'code_version': '3.5.1615', 'process_timestamp': '2018-08-21T23:32:17Z', 'shakemap_originator': 'us', 'map_status': 'RELEASED'
         #FIXME: deal with description
@@ -207,6 +207,9 @@ def quakemap2shakeml(qm,provider='GFZ'):
         depth = le.QName("depth")
         lat = le.QName("lat")
         lon = le.QName("lon")
+        strike = le.QName("strike")
+        rake = le.QName("rake")
+        dip = le.QName("dip")
         event_timestamp = le.QName("event_timestamp")
         event_network = le.QName("event_network")
         event_description = le.QName("event_description")
@@ -216,6 +219,9 @@ def quakemap2shakeml(qm,provider='GFZ'):
                                 depth: str(event.depth),
                                 lat:str(event.latitude),
                                 lon:str(event.longitude),
+                                strike:str(event.strike),
+                                rake:str(event.rake),
+                                dip:str(event.dip),
                                 event_timestamp:str(quakeml.event2utc(event)),
                                 event_network:str(event.Agency),
                                 event_description:''
