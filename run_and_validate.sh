@@ -12,7 +12,7 @@ if ! [ -f "test.xml" ]; then
 fi
 
 # we have to shorten the grid data so xmllint has no parser problems
-sed -i -e '16,280865d' "test.xml"
+sed -i -e '19,500000d' "test.xml"
 
 echo "Validating against schema ..."
 
@@ -32,7 +32,7 @@ if ! [ -f "test.xml" ]; then
 fi
 
 # we have to shorten the grid data so xmllint has no parser problems
-sed -i -e '16,33246d' "test.xml"
+sed -i -e '19,40000d' "test.xml"
 
 echo "Validating against schema ..."
 
