@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ERROR=0
+
 rm -vf "test.xml"
 
 set -x
@@ -18,6 +20,12 @@ echo "Validating against schema ..."
 
 if [ -x "$(command -v xmllint)" ]; then
     xmllint --noout --schema "shakemap.xsd" "test.xml"
+    if [ "$?" != "0" ]; then
+      ERROR=1
+    fi
+else
+    echo "xmllint is not installed"
+    exit 1
 fi
 
 rm -vf "test.xml"
@@ -38,4 +46,12 @@ echo "Validating against schema ..."
 
 if [ -x "$(command -v xmllint)" ]; then
     xmllint --noout --schema "shakemap.xsd" "test.xml"
+    if [ "$?" != "0" ]; then
+      ERROR=1
+    fi
+else
+    echo "xmllint is not installed"
+    exit 1
 fi
+
+exit $ERROR
