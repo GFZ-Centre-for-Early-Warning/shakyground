@@ -51,6 +51,9 @@
 		<attribute name="event_timestamp" type="string" use="required" />
 		<attribute name="event_network" type="string" use="required" />
 		<attribute name="event_description" type="string" use="required" />
+		<attribute name="dip" type="string" use="optional" />
+		<attribute name="rake" type="string" use="optional" />
+		<attribute name="strike" type="string" use="optional" />
 	</complexType>
 
 	<complexType name="grid_specification_type">
