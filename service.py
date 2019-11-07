@@ -48,7 +48,7 @@ def filter_sites(sites,roi):
     #filter
     return sites[(sites.lon >= roi[0]) & (sites.lon <= roi[1]) & (sites.lat >= roi[2]) & (sites.lat <= roi[3])].to_dict('list')
 
-def event_shakemap(quakemlfile,imt = "PGA",gmpe = "BindiEtAl2014Rjb", sites=None, roi=None, pgamin=None):
+def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", sites=None, roi=None, pgamin=None):
     '''
     Takes an event defined in quakeml: quakemlfile (can be file or string)
     and returns a shakemap calculated for
