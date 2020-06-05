@@ -12,7 +12,6 @@ stages:
   - compile
   - pep8check
   - pylintcheck
-  - test
   - dockerbuild
 
 jobs:
@@ -30,13 +29,8 @@ jobs:
         - pip3 install pylint
       script:
         - pylint --exit-zero *.py
-    - stage: test
-      before_install:
-        - sudo apt-get install -y unzip libxml2-utils
-        - unzip updated_lima_valparaiso_global_vs30_grd.zip && mv updated_lima_valparaiso_global_vs30.grd global_vs30.grd
-      script:
-        - bash run_and_validate.sh
     - stage: dockerbuild
       install: skip
       script:
-        - docker build -f metadata/Dockerfile .
+        - docker build -f metadata/Dockerfile . -t shakyground:test
+        - docker run shakyground:test "/bin/bash" "run_and_validate.sh"
