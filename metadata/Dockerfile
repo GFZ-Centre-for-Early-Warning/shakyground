@@ -8,7 +8,14 @@ WORKDIR /root
 COPY requirements.txt .
 
 RUN apt-get update && \
-    apt-get install python3.7 python3-pip gmt gmt-dcw gmt-gshhg python3-tk unzip -y && \
+    apt-get install -y \
+        libgirepository1.0-dev \
+        python3-pip \
+        gmt \
+        gmt-dcw \
+        gmt-gshhg \
+        python3-tk \
+        unzip && \
     pip3 install -r requirements.txt
 
 WORKDIR /usr/share/git/shakyground
