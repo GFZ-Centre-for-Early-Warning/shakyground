@@ -2,17 +2,16 @@ dist: bionic
 language: python
 
 python:
-  - "3.7"
+  - "3.6"
 
 install:
-  - sudo apt-get install -y gmt gmt-dcw gmt-gshhg python3-tk
-  - pip3 install pandas scipy lxml h5py shapely zmq mock matplotlib decorator scipy psutil pygmt
+  - sudo apt-get install -y gmt gmt-dcw gmt-gshhg python3-tk libgirepository1.0-dev
+  - pip3 install -r requirements.txt
 
 stages:
   - compile
   - pep8check
   - pylintcheck
-  - test
   - dockerbuild
 
 jobs:
@@ -30,13 +29,8 @@ jobs:
         - pip3 install pylint
       script:
         - pylint --exit-zero *.py
-    - stage: test
-      before_install:
-        - sudo apt-get install -y wget unzip libxml2-utils
-        - wget https://earthquake.usgs.gov/static/lfs/data/global_vs30_grd.zip && unzip global_vs30_grd.zip -d . && rm global_vs30_grd.zip
-      script:
-        - bash run_and_validate.sh
     - stage: dockerbuild
       install: skip
       script:
-        - docker build -f metadata/Dockerfile .
+        - docker build -f metadata/Dockerfile . -t shakyground:test
+        - docker run shakyground:test "/bin/bash" "run_and_validate.sh"
