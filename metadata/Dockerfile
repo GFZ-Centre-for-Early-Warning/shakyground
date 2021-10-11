@@ -1,4 +1,4 @@
-FROM gfzriesgos/shakyground-grid-file:20200605
+FROM gfzriesgos/shakyground-grid-file:20211011
 
 # for not having interaction on installation process
 ENV DEBIAN_FRONTEND noninteractive
