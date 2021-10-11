@@ -13,6 +13,19 @@
             "useAs": "commandLineArgument",
             "type": "quakeml",
             "schema": "http://quakeml.org/xmlns/quakeml/1.2/QuakeML-1.2.xsd"
+        },
+        {
+            "title": "gmpe",
+            "abstract": "Ground motion prediction equation.",
+            "useAs": "commandLineArgument",
+            "type": "string",
+            "default": "MontalvaEtAl2016SInter",
+            "allowed": [
+                "MontalvaEtAl2016SInter",
+                "GhofraniAtkinson2014",
+                "AbrahamsonEtAl2015SInter",
+                "YoungsEtAl1997Inter"
+            ]
         }
     ],
     "output": [

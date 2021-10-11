@@ -185,15 +185,16 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", site
     #convert to shakeml format and return
     return shakeml.quakemap2shakeml(quakemap,provider='GFZ')
 
-def main(quakemlfile):
-    print(event_shakemap(quakemlfile))
+def main(quakemlfile, gmpe):
+    print(event_shakemap(quakemlfile, gmpe=gmpe))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'Return shakemap for quakeml event')
     parser.add_argument('quakemlfile', help='Quakemlfile')
+    parser.add_argument('gmpe', help='Ground motion prediction equation')
     args = parser.parse_args()
 
-    main(args.quakemlfile)
+    main(args.quakemlfile, args.gmpe)
 
 
 
