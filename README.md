@@ -5,6 +5,10 @@
 Openquake code is added here for convenience should be replaced in production
 by an actual openquake installation on server
 
+## Citation
+
+Weatherill, Graeme; Pittore, Massimiliano; Haas, Michael; Brinckmann, Nils; Rüster, Matthias; Gomez-Zapata, Juan Camilo (2021): Shakyground: a web service to serve GMPE-based ground motion fields. V. 1.0. GFZ Data Services. https://doi.org/10.5880/riesgos.2021.004
+
 ## Setup
 
 We use the global vs30 grid created from the repository
