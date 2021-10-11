@@ -109,12 +109,12 @@ def vs30_to_z2pt5_cb14(vs30, japan=False):
         return np.exp(7.089 - 1.144 * np.log(vs30))
 
 
-def get_vs30_sites_from_bbox(bbox, isep="\t"):
+def get_vs30_sites_from_bbox(bbox, isep="\t", vsgrid='global_vs30'):
     """
     Returns a basic site dictionary from a bbox [llon, ulon, llat, ulat]
     """
     filepath=os.path.dirname(__file__)
-    site_data_path = os.path.join(filepath, "global_vs30.grd")
+    site_data_path = os.path.join(filepath, vsgrid + ".grd")
     tempfile = "tempfile.grd"
     # Call grdcut
     cutstring = "/".join([str(loc) for loc in bbox])
