@@ -5,7 +5,7 @@ ERROR=0
 rm -vf "test.xml"
 
 set -x
-python3 service.py quakeml_test.xml MontalvaEtAl2016SInter > "test.xml"
+python3 service.py quakeml_test.xml MontalvaEtAl2016SInter USGSSlopeBasedTopographyProxy  > "test.xml"
 set +x
 
 if ! [ -f "test.xml" ]; then
@@ -31,7 +31,7 @@ fi
 rm -vf "test.xml"
 
 set -x
-python3 service.py quakeml_test_ns.xml MontalvaEtAl2016SInter > "test.xml"
+python3 service.py quakeml_test_ns.xml MontalvaEtAl2016SInter USGSSlopeBasedTopographyProxy > "test.xml"
 set +x
 
 if ! [ -f "test.xml" ]; then

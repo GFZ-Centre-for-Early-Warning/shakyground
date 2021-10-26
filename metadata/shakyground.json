@@ -26,6 +26,17 @@
                 "AbrahamsonEtAl2015SInter",
                 "YoungsEtAl1997SInterNSHMP2008"
             ]
+        },
+        {
+            "title": "vsgrid",
+            "abstract": "Grid shear wave velocity in 30 meter depth",
+            "useAs": "commandLineArgument",
+            "type": "string",
+            "default": "USGSSlopeBasedTopographyProxy",
+            "allowed": [
+                "USGSSlopeBasedTopographyProxy",
+                "FromSeismogeotechnicsMicrozonation"
+            ]
         }
     ],
     "output": [

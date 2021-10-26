@@ -48,7 +48,7 @@ def filter_sites(sites,roi):
     #filter
     return sites[(sites.lon >= roi[0]) & (sites.lon <= roi[1]) & (sites.lat >= roi[2]) & (sites.lat <= roi[3])].to_dict('list')
 
-def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", sites=None, roi=None, pgamin=None):
+def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", sites=None, roi=None, pgamin=None, vsgrid='USGSSlopeBasedTopographyProxy'):
     '''
     Takes an event defined in quakeml: quakemlfile (can be file or string)
     and returns a shakemap calculated for
@@ -116,14 +116,14 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", site
         regular_grid=True
         #get sites form USGS topo
         if roi!=None:
-            sites = sml.get_vs30_sites_from_bbox(roi)
+            sites = sml.get_vs30_sites_from_bbox(roi, vsgrid=vsgrid)
             #maybe in addition pgamin
             if pgamin!=None:
                 sites = filter_sites(sites,droi)
         else:
             #no sites, no roi
             #slice sites from vs30
-            sites = sml.get_vs30_sites_from_bbox(droi)
+            sites = sml.get_vs30_sites_from_bbox(droi, vsgrid=vsgrid)
     else:
         #sites provided
         #if sites == pandas.core.frame.DataFrame:
@@ -147,7 +147,7 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", site
             sites = filter_sites(sites,roi)
         if pgamin!=None:
             #slice sites from vs30
-            sites = sml.get_vs30_sites_from_bbox(droi)
+            sites = sml.get_vs30_sites_from_bbox(droi, vsgrid=vsgrid)
 
     # Runs the shakemap for a given event and site configuration
     shakemap(oqevent, sites)
@@ -185,16 +185,17 @@ def event_shakemap(quakemlfile,imt = "PGA",gmpe = "MontalvaEtAl2016SInter", site
     #convert to shakeml format and return
     return shakeml.quakemap2shakeml(quakemap,provider='GFZ')
 
-def main(quakemlfile, gmpe):
-    print(event_shakemap(quakemlfile, gmpe=gmpe))
+def main(quakemlfile, gmpe, vsgrid):
+    print(event_shakemap(quakemlfile, gmpe=gmpe, vsgrid=vsgrid))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'Return shakemap for quakeml event')
     parser.add_argument('quakemlfile', help='Quakemlfile')
     parser.add_argument('gmpe', help='Ground motion prediction equation')
+    parser.add_argument('vsgrid', help='Grid for shear wave velocities')
     args = parser.parse_args()
 
-    main(args.quakemlfile, args.gmpe)
+    main(args.quakemlfile, args.gmpe, args.vsgrid)
 
 
 
