@@ -1,0 +1,128 @@
+stages:
+  - test
+  - build
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .pip
+
+variables:
+  SHAKYGROUND_BASE_IMAGE: "gfzriesgos/shakyground-grid-file:20211011"
+
+.install_requirements: &install_requirements
+  - DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip gmt gmt-dcw gmt-gshhg python3-tk libgirepository1.0-dev libxml2-utils unzip
+  - pip3 install --cache-dir=.pip -r requirements.txt
+
+verify_python:
+  image: ${SHAKYGROUND_BASE_IMAGE}
+  stage: test
+  tags:
+    - group
+  before_script:
+    - *install_requirements
+  script:
+    - python3 -m compileall .
+
+python_pycodestyle:
+  image: ${SHAKYGROUND_BASE_IMAGE}
+  stage: test
+  # TODO: fix code to fit with PEP8 guidelines
+  allow_failure: true
+  tags:
+    - group
+  before_script:
+    - *install_requirements
+    - pip3 install --cache-dir=.pip pycodestyle
+  script:
+    # do not check source code of openquake
+    - pycodestyle *.py
+
+python_pylint:
+  image: ${SHAKYGROUND_BASE_IMAGE}
+  stage: test
+  # TODO: fix code to get a better pylint rating
+  allow_failure: true
+  tags:
+    - group
+  before_script:
+    - *install_requirements
+    - pip3 install --cache-dir=.pip pylint
+  script:
+    # do not check source code of openquake
+    - pylint --fail-under=8 *.py
+
+python_black:
+  image: ${SHAKYGROUND_BASE_IMAGE}
+  stage: test
+  tags:
+    - group
+  before_script:
+    - *install_requirements
+    - pip3 install --cache-dir=.pip black==21.4b2
+  script:
+    # do not check source code of openquake
+    - black --check *.py
+
+run_tests:
+  image: ${SHAKYGROUND_BASE_IMAGE}
+  stage: test
+  tags:
+    - group
+  before_script:
+    - *install_requirements
+  script:
+    # link needed grid files so that the tests can run inside the repo dir
+    - ln -svf /usr/share/git/shakyground/USGSSlopeBasedTopographyProxy.grd USGSSlopeBasedTopographyProxy.grd
+    - ln -svf /usr/share/git/shakyground/FromSeismogeotechnicsMicrozonation.grd FromSeismogeotechnicsMicrozonation.grd
+    - /bin/bash run_and_validate.sh
+
+verify_json:
+  stage: test
+  image: registry.gitlab.com/pipeline-components/jsonlint:0.12.0
+  cache: {}
+  script:
+    - |
+      find . -not -path './.git/*' -name '*.json' -type f -print0 |
+      parallel --will-cite -k -0 -n1 jsonlint -q
+
+dockerbuild_latest:
+  image: docker/compose:1.29.2
+  stage: build
+  cache: {}
+  tags:
+    - group
+  script:
+    - docker build -t shakyground:latest -f metadata/Dockerfile .
+
+    # push latest image to Docker Hub
+    - docker tag shakyground:latest gfzriesgos/shakyground:latest
+    - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
+    - docker push gfzriesgos/shakyground:latest
+
+    # push latest image to GitLab Container Registry
+    - docker tag shakyground:latest git.gfz-potsdam.de:5000/id2/riesgos/shakyground:latest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push git.gfz-potsdam.de:5000/id2/riesgos/shakyground:latest
+
+dockerbuild_tagged:
+  image: docker/compose:1.29.2
+  stage: build
+  cache: {}
+  tags:
+    - group
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - docker build -t shakyground:$CI_COMMIT_TAG -f metadata/Dockerfile .
+
+    # push image to Docker Hub
+    - docker tag shakyground:$CI_COMMIT_TAG gfzriesgos/shakyground:$CI_COMMIT_TAG
+    - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
+    - docker push gfzriesgos/shakyground:$CI_COMMIT_TAG
+
+    # push image to GitLab Container Registry
+    - docker tag shakyground:$CI_COMMIT_TAG git.gfz-potsdam.de:5000/id2/riesgos/shakyground:$CI_COMMIT_TAG
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push git.gfz-potsdam.de:5000/id2/riesgos/shakyground:$CI_COMMIT_TAG
