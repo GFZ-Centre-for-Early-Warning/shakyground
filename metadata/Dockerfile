@@ -8,6 +8,7 @@ WORKDIR /usr/share/git/shakyground
 COPY requirements.txt .
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y \
         libgirepository1.0-dev \
         python3-pip \
