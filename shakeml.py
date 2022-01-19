@@ -22,7 +22,9 @@ class quakemap:
         self, event, event_specific_uncertainty, shakemap, units, regular_grid
     ):
         self.event = event  # pandas series
-        self.event_specific_uncertainty = event_specific_uncertainty  # pandas dataframe
+        self.event_specific_uncertainty = (
+            event_specific_uncertainty  # pandas dataframe
+        )
         self.shakemap = shakemap  # pandas dataframe
         self.units = units  # pandas series
         self.regular_grid = regular_grid  # regular or irregular
@@ -131,7 +133,9 @@ def shakemap2quakemap(shakemlfile):
         )
         index = [i for i in range(len(elems_event_specific_uncertainties))]
         columns = ["name", "value", "numsta"]
-        event_specific_uncertainties = pandas.DataFrame(index=index, columns=columns)
+        event_specific_uncertainties = pandas.DataFrame(
+            index=index, columns=columns
+        )
         for i, el in enumerate(elems_event_specific_uncertainties):
             event_specific_uncertainties.iloc[i]["name"] = el.attrib["name"]
             event_specific_uncertainties.iloc[i].value = el.attrib["value"]
@@ -154,7 +158,9 @@ def shakemap2quakemap(shakemlfile):
     grid_fields = shakeml.findall("grid_field", namespaces=nsmap)
 
     # indices (start at 1) & argsort them
-    column_idxs = [int(grid_field.attrib["index"]) - 1 for grid_field in grid_fields]
+    column_idxs = [
+        int(grid_field.attrib["index"]) - 1 for grid_field in grid_fields
+    ]
     idxs_sorted = np.argsort(column_idxs)
     column_names = [grid_field.attrib["name"] for grid_field in grid_fields]
     columns = [column_names[idx] for idx in idxs_sorted]
@@ -368,8 +374,12 @@ def quakemap2shakeml(qm, provider="GFZ"):
                     "event_specific_uncertainty",
                     {
                         name: str(event_specific_uncertainty.iloc[i]["name"]),
-                        value: str(event_specific_uncertainty.iloc[i]["value"]),
-                        numsta: str(event_specific_uncertainty.iloc[i]["numsta"]),
+                        value: str(
+                            event_specific_uncertainty.iloc[i]["value"]
+                        ),
+                        numsta: str(
+                            event_specific_uncertainty.iloc[i]["numsta"]
+                        ),
                     },
                     nsmap=nsmap,
                 )
@@ -396,7 +406,11 @@ def quakemap2shakeml(qm, provider="GFZ"):
             le.SubElement(
                 shakeml,
                 "grid_field",
-                {index: str(i + 1), _name: col, _units: str(units[col])},  # starts at 1
+                {
+                    index: str(i + 1),
+                    _name: col,
+                    _units: str(units[col]),
+                },  # starts at 1
                 nsmap=nsmap,
             )
         )

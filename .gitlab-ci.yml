@@ -63,7 +63,7 @@ python_black:
     - pip3 install --cache-dir=.pip black==21.4b2
   script:
     # do not check source code of openquake
-    - black --check *.py
+    - black -l 79 --check *.py
 
 run_tests:
   image: ${SHAKYGROUND_BASE_IMAGE}

@@ -7,7 +7,13 @@ import subprocess
 import h5py
 import numpy as np
 import pandas as pd
-from openquake.hazardlib.geo import Point, PlanarSurface, NodalPlane, MultiSurface, Mesh
+from openquake.hazardlib.geo import (
+    Point,
+    PlanarSurface,
+    NodalPlane,
+    MultiSurface,
+    Mesh,
+)
 from openquake.hazardlib.gsim import get_available_gsims
 from openquake.hazardlib.imt import PGA, PGV, SA, from_string
 from openquake.hazardlib.contexts import (
@@ -50,17 +56,25 @@ def create_planar_surface(top_centroid, strike, dip, area, aspect):
     length = aspect * width
     # Get end points by moving the top_centroid along strike
     top_right = top_centroid.point_at(length / 2.0, 0.0, strike)
-    top_left = top_centroid.point_at(length / 2.0, 0.0, (strike + 180.0) % 360.0)
+    top_left = top_centroid.point_at(
+        length / 2.0, 0.0, (strike + 180.0) % 360.0
+    )
     # Along surface width
     surface_width = width * cos(rad_dip)
     vertical_depth = width * sin(rad_dip)
     dip_direction = (strike + 90.0) % 360.0
 
-    bottom_right = top_right.point_at(surface_width, vertical_depth, dip_direction)
-    bottom_left = top_left.point_at(surface_width, vertical_depth, dip_direction)
+    bottom_right = top_right.point_at(
+        surface_width, vertical_depth, dip_direction
+    )
+    bottom_left = top_left.point_at(
+        surface_width, vertical_depth, dip_direction
+    )
 
     # Create the rupture
-    return PlanarSurface(strike, dip, top_left, top_right, bottom_right, bottom_left)
+    return PlanarSurface(
+        strike, dip, top_left, top_right, bottom_right, bottom_left
+    )
 
 
 def vs30_to_z1pt0_cy14(vs30, japan=False):
@@ -78,7 +92,9 @@ def vs30_to_z1pt0_cy14(vs30, japan=False):
     if japan:
         c1 = 412.0 ** 2.0
         c2 = 1360.0 ** 2.0
-        return np.exp((-5.23 / 2.0) * np.log((np.power(vs30, 2.0) + c1) / (c2 + c1)))
+        return np.exp(
+            (-5.23 / 2.0) * np.log((np.power(vs30, 2.0) + c1) / (c2 + c1))
+        )
     else:
         c1 = 571 ** 4.0
         c2 = 1360.0 ** 4.0
@@ -289,9 +305,13 @@ class ShakemapLite(object):
                 mean, [sigma] = gmpe.get_mean_and_stddevs(
                     sctx, rctx, dctx, imt, [const.StdDev.TOTAL]
                 )
-                mean_dset = imt_grp.create_dataset("median", mean.shape, dtype="f")
+                mean_dset = imt_grp.create_dataset(
+                    "median", mean.shape, dtype="f"
+                )
                 mean_dset[:] = np.exp(mean)
-                sigma_dset = imt_grp.create_dataset("sigma", sigma.shape, dtype="f")
+                sigma_dset = imt_grp.create_dataset(
+                    "sigma", sigma.shape, dtype="f"
+                )
                 sigma_dset[:] = sigma
         fle.close()
 
@@ -329,22 +349,36 @@ class ShakemapLite(object):
         mshape = mesh.lons.shape
         dctx = DistancesContext()
         for param in self.context.REQUIRES_DISTANCES:
-            setattr(dctx, param, get_distances(event.get_rupture(), mesh, param))
+            setattr(
+                dctx, param, get_distances(event.get_rupture(), mesh, param)
+            )
         # Get sites context
         sctx = SitesContext()
         for key in self.site_attribs:
             if key.startswith("z1pt0") and not "z1pt0" in sites:
-                setattr(sctx, "z1pt0", vs30_to_z1pt0_cy14(sites["vs30"], japan=False))
+                setattr(
+                    sctx,
+                    "z1pt0",
+                    vs30_to_z1pt0_cy14(sites["vs30"], japan=False),
+                )
 
             elif key.startswith("z2pt5") and not "z5pt5" in sites:
-                setattr(sctx, "z2pt5", vs30_to_z2pt5_cb14(sites["vs30"], japan=False))
+                setattr(
+                    sctx,
+                    "z2pt5",
+                    vs30_to_z2pt5_cb14(sites["vs30"], japan=False),
+                )
 
-            elif key.startswith("vs30measured") and not "vs30measured" in sites:
+            elif (
+                key.startswith("vs30measured") and not "vs30measured" in sites
+            ):
                 if vs30measured:
                     setattr(sctx, "vs30measured", np.ones(mshape, dtype=bool))
                 else:
                     setattr(sctx, "vs30measured", np.zeros(mshape, dtype=bool))
-            elif key.startswith("vs30measured") and not "vs30measured" in sites:
+            elif (
+                key.startswith("vs30measured") and not "vs30measured" in sites
+            ):
                 if vs30measured:
                     setattr(sctx, "vs30measured", np.ones(mshape, dtype=bool))
                 else:

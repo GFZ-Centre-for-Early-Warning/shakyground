@@ -215,7 +215,14 @@ def event_shakemap(
 
     # FIXME: Handle somehow (even necessary)!?
     event_specific_uncertainty = pandas.DataFrame()
-    event_specific_uncertainty["name"] = ["pga", "pgv", "mi", "psa03", "psa10", "psa30"]
+    event_specific_uncertainty["name"] = [
+        "pga",
+        "pgv",
+        "mi",
+        "psa03",
+        "psa10",
+        "psa30",
+    ]
     event_specific_uncertainty["value"] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     event_specific_uncertainty["numsta"] = ["", "", "", "", "", ""]
 
@@ -232,7 +239,9 @@ def main(quakemlfile, gmpe, vsgrid):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Return shakemap for quakeml event")
+    parser = argparse.ArgumentParser(
+        description="Return shakemap for quakeml event"
+    )
     parser.add_argument("quakemlfile", help="Quakemlfile")
     parser.add_argument("gmpe", help="Ground motion prediction equation")
     parser.add_argument("vsgrid", help="Grid for shear wave velocities")

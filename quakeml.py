@@ -42,7 +42,8 @@ def utc2event(utc):
     return [
         int(v) if i < 5 else float(v)
         for i, v in enumerate(
-            [int(d) for d in date.split("-")] + [float(t) for t in time[:-1].split(":")]
+            [int(d) for d in date.split("-")]
+            + [float(t) for t in time[:-1].split(":")]
         )
     ]
 
@@ -57,7 +58,9 @@ def events2quakeml(catalog, provider="GFZ"):
     # go through all events
     for i in range(len(catalog)):
         quake = catalog.iloc[i]
-        event = le.SubElement(quakeml, "event", {"publicID": str(quake.eventID)})
+        event = le.SubElement(
+            quakeml, "event", {"publicID": str(quake.eventID)}
+        )
         preferredOriginID = le.SubElement(
             event, "preferredOriginID", namespace=NS_QUAKEML
         )
@@ -73,7 +76,10 @@ def events2quakeml(catalog, provider="GFZ"):
         text.text = str(quake.type)
         # origin
         origin = le.SubElement(
-            event, "origin", {"publicID": str(quake.eventID)}, namespace=NS_QUAKEML
+            event,
+            "origin",
+            {"publicID": str(quake.eventID)},
+            namespace=NS_QUAKEML,
         )
         time = le.SubElement(origin, "time", namespace=NS_QUAKEML)
         value = le.SubElement(time, "value", namespace=NS_QUAKEML)
@@ -87,19 +93,26 @@ def events2quakeml(catalog, provider="GFZ"):
         depth = le.SubElement(origin, "depth", namespace=NS_QUAKEML)
         value = le.SubElement(depth, "value", namespace=NS_QUAKEML)
         value.text = str(quake.depth)
-        creationInfo = le.SubElement(origin, "creationInfo", namespace=NS_QUAKEML)
+        creationInfo = le.SubElement(
+            origin, "creationInfo", namespace=NS_QUAKEML
+        )
         author = le.SubElement(creationInfo, "value", namespace=NS_QUAKEML)
         author.text = provider
         # magnitude
         magnitude = le.SubElement(
-            event, "magnitude", {"publicID": str(quake.eventID)}, namespace=NS_QUAKEML
+            event,
+            "magnitude",
+            {"publicID": str(quake.eventID)},
+            namespace=NS_QUAKEML,
         )
         mag = le.SubElement(magnitude, "mag", namespace=NS_QUAKEML)
         value = le.SubElement(mag, "value", namespace=NS_QUAKEML)
         value.text = str(quake.magnitude)
         mtype = le.SubElement(magnitude, "type", namespace=NS_QUAKEML)
         mtype.text = "MW"
-        creationInfo = le.SubElement(magnitude, "creationInfo", namespace=NS_QUAKEML)
+        creationInfo = le.SubElement(
+            magnitude, "creationInfo", namespace=NS_QUAKEML
+        )
         author = le.SubElement(creationInfo, "value", namespace=NS_QUAKEML)
         author.text = provider
         # plane (write only fault plane not auxilliary)
@@ -109,8 +122,12 @@ def events2quakeml(catalog, provider="GFZ"):
             {"publicID": str(quake.eventID)},
             namespace=NS_QUAKEML,
         )
-        nodalPlanes = le.SubElement(focalMechanism, "nodalPlanes", namespace=NS_QUAKEML)
-        nodalPlane1 = le.SubElement(nodalPlanes, "nodalPlane1", namespace=NS_QUAKEML)
+        nodalPlanes = le.SubElement(
+            focalMechanism, "nodalPlanes", namespace=NS_QUAKEML
+        )
+        nodalPlane1 = le.SubElement(
+            nodalPlanes, "nodalPlane1", namespace=NS_QUAKEML
+        )
         strike = le.SubElement(nodalPlane1, "strike", namespace=NS_QUAKEML)
         value = le.SubElement(strike, "value", namespace=NS_QUAKEML)
         value.text = str(quake.strike)
@@ -208,7 +225,9 @@ def quakeml2events(quakemlfile, provider="GFZ"):
         # get ID
         catalog.iloc[i].eventID = event.attrib["publicID"]
         # type
-        catalog.iloc[i].type = find_text_in_element(event, "description", "text")
+        catalog.iloc[i].type = find_text_in_element(
+            event, "description", "text"
+        )
         # origin
         origin = find_element(event, "origin")
         # time
@@ -228,12 +247,18 @@ def quakeml2events(quakemlfile, provider="GFZ"):
         catalog.iloc[i].longitude = float(
             find_text_in_element(origin, "longitude", "value")
         )
-        catalog.iloc[i].depth = float(find_text_in_element(origin, "depth", "value"))
+        catalog.iloc[i].depth = float(
+            find_text_in_element(origin, "depth", "value")
+        )
         # agency/provider
-        catalog.iloc[i].agency = find_text_in_element(origin, "creationInfo", "value")
+        catalog.iloc[i].agency = find_text_in_element(
+            origin, "creationInfo", "value"
+        )
         # magnitude
         mag = find_element(event, "magnitude")
-        catalog.iloc[i].magnitude = float(find_text_in_element(mag, "mag", "value"))
+        catalog.iloc[i].magnitude = float(
+            find_text_in_element(mag, "mag", "value")
+        )
         # plane
         focal = find_element(event, "focalMechanism")
         nodalPlanes = find_element(focal, "nodalPlanes")

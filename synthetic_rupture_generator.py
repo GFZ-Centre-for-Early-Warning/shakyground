@@ -10,7 +10,13 @@ from scipy.stats import norm, truncnorm, chi2, multivariate_normal
 
 # import emcee
 from openquake.hazardlib.pmf import PMF
-from openquake.hazardlib.geo import NodalPlane, PlanarSurface, Point, Mesh, geodetic
+from openquake.hazardlib.geo import (
+    NodalPlane,
+    PlanarSurface,
+    Point,
+    Mesh,
+    geodetic,
+)
 
 
 class PlanarSurfaceAlt(PlanarSurface):
@@ -106,9 +112,13 @@ class Stafford2014(BaseScaleRel):
         """
         sof = self._get_sof(rake)
         # Get mean and standard deviation of rupture width
-        mu_rw, sigma_rw, rw_max, p_i = self.get_rupture_width(magnitude, dip, sof, lsd)
+        mu_rw, sigma_rw, rw_max, p_i = self.get_rupture_width(
+            magnitude, dip, sof, lsd
+        )
         # Get mean and standard deviation of rupture area
-        mu_ra, sigma_ra = self.get_rupture_area(magnitude, sof, rw_max, sigma_rw)
+        mu_ra, sigma_ra = self.get_rupture_area(
+            magnitude, sof, rw_max, sigma_rw
+        )
         F_rw_max_norm = norm.cdf(log(rw_max), loc=mu_rw, scale=sigma_rw)
         ncdf_epsilon = norm.cdf(epsilon)
         target = ncdf_epsilon / F_rw_max_norm
@@ -129,7 +139,9 @@ class Stafford2014(BaseScaleRel):
             r_l,
             r_w,
             aspect,
-            multivariate_normal.pdf(epsilon_rw, epsilon_ra, cov=self.COEFFS[4][sof]),
+            multivariate_normal.pdf(
+                epsilon_rw, epsilon_ra, cov=self.COEFFS[4][sof]
+            ),
         )
 
     def _get_sof(self, rake):
@@ -161,7 +173,9 @@ class Stafford2014(BaseScaleRel):
             + self.COEFFS[1][sof]["a2"] * rw_max
         )
         p_i = 1.0 / (1.0 + exp(-z_i))
-        ln_rw = self.COEFFS[2][sof]["b0"] + self.COEFFS[2][sof]["b1"] * magnitude
+        ln_rw = (
+            self.COEFFS[2][sof]["b0"] + self.COEFFS[2][sof]["b1"] * magnitude
+        )
         phi_rw = (log(rw_max) - ln_rw) / self.COEFFS[2][sof]["sigma"]
         phi_rw_ncdf = norm.cdf(phi_rw)
         ln_rw_trunc = ln_rw - self.COEFFS[2][sof]["sigma"] * (
@@ -191,7 +205,9 @@ class Stafford2014(BaseScaleRel):
         """
         Returns the rupture area
         """
-        mw_crit = (log(rw_max) - self.COEFFS[2][sof]["b0"]) / self.COEFFS[2][sof]["b1"]
+        mw_crit = (log(rw_max) - self.COEFFS[2][sof]["b0"]) / self.COEFFS[2][
+            sof
+        ]["b1"]
         ln_ra = self.COEFFS[3][sof]["gamma0"] + log(10.0) * magnitude
         if magnitude > mw_crit:
             ln_ra -= (log(10.0) / 4.0) * (magnitude - mw_crit)
@@ -215,7 +231,9 @@ NGAWEST_HYPO_DISTRIBUTIONS = {
     "SS": {
         "Mean": np.array([0.48545206, 0.64942746]),
         "Sigma": np.array([0.22415657, 0.21677068]),
-        "COV": np.array([[0.05064814, -0.00603003], [-0.00603003, 0.04736544]]),
+        "COV": np.array(
+            [[0.05064814, -0.00603003], [-0.00603003, 0.04736544]]
+        ),
         "DipRange": [80.0, 90.0],
     },
     "R": {
@@ -227,7 +245,9 @@ NGAWEST_HYPO_DISTRIBUTIONS = {
     "N": {
         "Mean": np.array([0.50887254, 0.82404]),
         "Sigma": np.array([0.22416128, 0.13647917]),
-        "COV": np.array([[0.05085368, -0.00332741], [-0.00332741, 0.01885098]]),
+        "COV": np.array(
+            [[0.05085368, -0.00332741], [-0.00332741, 0.01885098]]
+        ),
         "DipRange": [50.0, 80.0],
     },
 }
@@ -289,11 +309,16 @@ class FiniteRuptureSampler(object):
             centroid, magnitude, nsamples, mechanisms, dimensions
         )
         # Calculate the distances
-        distances, rhypo = self.get_distances(centroid, ruptures, site_lons, site_lats)
+        distances, rhypo = self.get_distances(
+            centroid, ruptures, site_lons, site_lats
+        )
         # Get the ruptures distances and central ruptures
         if len(rjb) or len(rrup):
             # Has Rrup or Rjb pre-calculated, find the best fitting rupture
-            central_rupture, central_distances = self.get_best_matching_rupture(
+            (
+                central_rupture,
+                central_distances,
+            ) = self.get_best_matching_rupture(
                 rjb, rrup, ruptures, distances, rhypo, rdim
             )
             for i, row in enumerate(central_distances):
@@ -308,7 +333,14 @@ class FiniteRuptureSampler(object):
                 print(
                     "%.5fE, %.5fN: Rjb = %.4f (orig. %s), "
                     "Rrup = %.4f (orig. %s)"
-                    % (site_lons[i], site_lats[i], row[0], comp_rjb, row[1], comp_rrup)
+                    % (
+                        site_lons[i],
+                        site_lats[i],
+                        row[0],
+                        comp_rjb,
+                        row[1],
+                        comp_rrup,
+                    )
                 )
 
         else:
@@ -340,20 +372,34 @@ class FiniteRuptureSampler(object):
         # Get hypocentres
         hypo_locs = self.sample_hypocentres(nsamples, sofs)
         # Build the ruptures
-        return self.build_ruptures(centroid, strikes, dips, lengths, widths, hypo_locs)
+        return self.build_ruptures(
+            centroid, strikes, dips, lengths, widths, hypo_locs
+        )
 
-    def sample_rupture_dimensions(self, nsamples, magnitude, strikes, dips, rakes):
+    def sample_rupture_dimensions(
+        self, nsamples, magnitude, strikes, dips, rakes
+    ):
         """
         Samples the rupture dimension from the magnitude scaling relation
         """
         # Sample epsilon values
-        msr_epsilons = truncnorm.rvs(-3.0, 3.0, loc=0, scale=1.0, size=nsamples)
+        msr_epsilons = truncnorm.rvs(
+            -3.0, 3.0, loc=0, scale=1.0, size=nsamples
+        )
         # Generate rupture dimensions
         lengths = np.zeros(nsamples)
         widths = np.zeros(nsamples)
         areas = np.zeros(nsamples)
-        for i, (dip, rake, epsilon) in enumerate(zip(dips, rakes, msr_epsilons)):
-            areas[i], lengths[i], widths[i], _, _ = self.msr.get_rupture_dimensions(
+        for i, (dip, rake, epsilon) in enumerate(
+            zip(dips, rakes, msr_epsilons)
+        ):
+            (
+                areas[i],
+                lengths[i],
+                widths[i],
+                _,
+                _,
+            ) = self.msr.get_rupture_dimensions(
                 magnitude, dip, rake, self.thickness, epsilon
             )
         # print np.column_stack([msr_epsilons, lengths, widths, areas])
@@ -369,7 +415,10 @@ class FiniteRuptureSampler(object):
             # Sample mechanisms
             mechanism_samples = mechanisms.sample(nsamples)
             strikes, dips, rakes = zip(
-                *[(mech.strike, mech.dip, mech.rake) for mech in mechanism_samples]
+                *[
+                    (mech.strike, mech.dip, mech.rake)
+                    for mech in mechanism_samples
+                ]
             )
             strikes = np.array(strikes)
             dips = np.array(dips)
@@ -421,7 +470,9 @@ class FiniteRuptureSampler(object):
                     cntr += 1
         return hypo_locs
 
-    def build_ruptures(self, centroid, strikes, dips, lengths, widths, hypo_locs):
+    def build_ruptures(
+        self, centroid, strikes, dips, lengths, widths, hypo_locs
+    ):
         """
         Builds the rupture set
         """
@@ -444,7 +495,9 @@ class FiniteRuptureSampler(object):
                 updip_depth_change = centroid.depth
                 downdip_depth_change += offset
             if downdip_depth_change > (self.lsd - centroid.depth):
-                if (updip_depth_change + downdip_depth_change) > self.thickness:
+                if (
+                    updip_depth_change + downdip_depth_change
+                ) > self.thickness:
                     # Determine excess width
                     offset = (centroid.depth + downdip_depth_change) - self.lsd
                     offset_area = length * (offset / np.sin(rdip))
@@ -465,7 +518,9 @@ class FiniteRuptureSampler(object):
             # Build corner points
             downdip_dir = (dip + 90.0) % 360
             updip_dir = (dip - 90.0) % 360
-            mid_left = centroid.point_at(left_length, 0.0, (strike + 180.0) % 360.0)
+            mid_left = centroid.point_at(
+                left_length, 0.0, (strike + 180.0) % 360.0
+            )
             mid_right = centroid.point_at(right_length, 0.0, strike)
             top_left = mid_left.point_at(
                 updip_surface_length, -updip_depth_change, updip_dir
@@ -522,13 +577,17 @@ class FiniteRuptureSampler(object):
 
         median_distances = np.zeros([4, nsites])
         for i in range(4):
-            median_distances[i, :] = np.percentile(distances[:, :, i], 50, axis=0)
+            median_distances[i, :] = np.percentile(
+                distances[:, :, i], 50, axis=0
+            )
         penalty_function = np.zeros(distances.shape[0])
         for i in range(distances.shape[2]):
             site_penalty = np.zeros(distances.shape[0])
             for k in range(distances.shape[1]):
                 site_penalty += site_weights[k] * (
-                    np.sqrt((distances[:, k, i] - median_distances[i, k]) ** 2.0)
+                    np.sqrt(
+                        (distances[:, k, i] - median_distances[i, k]) ** 2.0
+                    )
                 )
             penalty_function += weights[i] * site_penalty
         min_loc = np.argmin(penalty_function)
@@ -573,7 +632,8 @@ class FiniteRuptureSampler(object):
             site_penalty = np.zeros(distances.shape[0])
             for k in range(distances.shape[1]):
                 site_penalty += site_weights[k] * np.sqrt(
-                    (distances[:, k, idx[i]] - target_distances[idx[i], k]) ** 2.0
+                    (distances[:, k, idx[i]] - target_distances[idx[i], k])
+                    ** 2.0
                 )
             penalty_function += weights[i] * site_penalty
         min_loc = np.argmin(penalty_function)
