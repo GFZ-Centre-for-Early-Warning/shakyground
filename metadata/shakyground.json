@@ -1,7 +1,7 @@
 {
     "title": "ShakygroundProcess",
     "abstract": "This is the description of the shakyground process",
-    "imageId": "shakyground:latest",
+    "imageId": "gfzriesgos/shakyground:latest",
     "workingDirectory": "/usr/share/git/shakyground",
     "commandToExecute": "python3 service.py",
     "exitValueHandler": "logging",
