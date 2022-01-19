@@ -24,6 +24,7 @@ if [ -x "$(command -v xmllint)" ]; then
       ERROR=1
     fi
 else
+    rm -vf "test.xml"
     echo "xmllint is not installed"
     exit 1
 fi
@@ -50,8 +51,10 @@ if [ -x "$(command -v xmllint)" ]; then
       ERROR=1
     fi
 else
+    rm -vf "test.xml"
     echo "xmllint is not installed"
     exit 1
 fi
 
+rm -vf "test.xml"
 exit $ERROR
