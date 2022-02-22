@@ -70,6 +70,8 @@ run_tests:
   stage: test
   tags:
     - group
+    # we need a runner with more memory to calculate the grid files
+    - cuda
   before_script:
     - *install_requirements
   script:
