@@ -17,6 +17,8 @@ RUN apt-get update && \
         gmt-gshhg \
         python3-tk \
         libxml2-utils \
+        libcairo2-dev \
+        libssl-dev \
         unzip && \
     pip3 install -r requirements.txt
 
