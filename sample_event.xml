@@ -1,0 +1,65 @@
+<ns0:eventParameters xmlns:ns0="http://quakeml.org/xmlns/bed/1.2" publicID="quakeml:quakeledger/0">
+  <ns0:event publicID="quakeml:quakeledger/CHOA_122">
+    <ns0:preferredOriginID>quakeml:quakeledger/CHOA_122</ns0:preferredOriginID>
+    <ns0:preferredMagnitudeID>quakeml:quakeledger/CHOA_122</ns0:preferredMagnitudeID>
+    <ns0:type>earthquake</ns0:type>
+    <ns0:description>
+      <ns0:text>expert</ns0:text>
+    </ns0:description>
+    <ns0:origin publicID="quakeml:quakeledger/CHOA_122">
+      <ns0:time>
+        <ns0:value>2018-01-01T00:00:00.000000Z</ns0:value>
+        <ns0:uncertainty>NaN</ns0:uncertainty>
+      </ns0:time>
+      <ns0:latitude>
+        <ns0:value>-28.6384</ns0:value>
+        <ns0:uncertainty>NaN</ns0:uncertainty>
+      </ns0:latitude>
+      <ns0:longitude>
+        <ns0:value>-71.2736</ns0:value>
+        <ns0:uncertainty>NaN</ns0:uncertainty>
+      </ns0:longitude>
+      <ns0:depth>
+        <ns0:value>43.0</ns0:value>
+        <ns0:uncertainty>NaN</ns0:uncertainty>
+      </ns0:depth>
+      <ns0:creationInfo>
+        <ns0:author>GFZ</ns0:author>
+      </ns0:creationInfo>
+      <ns0:originUncertainty>
+        <ns0:horizontalUncertainty>NaN</ns0:horizontalUncertainty>
+        <ns0:minHorizontalUncertainty>NaN</ns0:minHorizontalUncertainty>
+        <ns0:maxHorizontalUncertainty>NaN</ns0:maxHorizontalUncertainty>
+        <ns0:azimuthMaxHorizontalUncertainty>NaN</ns0:azimuthMaxHorizontalUncertainty>
+      </ns0:originUncertainty>
+    </ns0:origin>
+    <ns0:magnitude publicID="quakeml:quakeledger/CHOA_122">
+      <ns0:mag>
+        <ns0:value>9.0</ns0:value>
+        <ns0:uncertainty>NaN</ns0:uncertainty>
+      </ns0:mag>
+      <ns0:type>MW</ns0:type>
+      <ns0:creationInfo>
+        <ns0:author>GFZ</ns0:author>
+      </ns0:creationInfo>
+    </ns0:magnitude>
+    <ns0:focalMechanism publicID="quakeml:quakeledger/CHOA_122">
+      <ns0:nodalPlanes preferredPlane="1">
+        <ns0:nodalPlane1>
+          <ns0:strike>
+            <ns0:value>9.0</ns0:value>
+            <ns0:uncertainty>NaN</ns0:uncertainty>
+          </ns0:strike>
+          <ns0:dip>
+            <ns0:value>18.0</ns0:value>
+            <ns0:uncertainty>NaN</ns0:uncertainty>
+          </ns0:dip>
+          <ns0:rake>
+            <ns0:value>90.0</ns0:value>
+            <ns0:uncertainty>NaN</ns0:uncertainty>
+          </ns0:rake>
+        </ns0:nodalPlane1>
+      </ns0:nodalPlanes>
+    </ns0:focalMechanism>
+  </ns0:event>
+</ns0:eventParameters>
